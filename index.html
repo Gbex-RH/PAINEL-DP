@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Painel DP — GBEX / GBLOG</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!-- Inter é usado se o download funcionar (licença SIL OFL, livre); sem
+     internet, a página cai de volta na pilha de fontes do sistema abaixo,
+     sem quebrar nada. -->
+<link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+<canvas id="starfield" aria-hidden="true"></canvas>
+<div id="bg-spotlight" aria-hidden="true"></div>
+
+<!-- Sprite de ícones inline (não em arquivo externo) para funcionar de forma
+     confiável quando esta página é aberta via duplo clique (file://), sem
+     depender de referências cross-file a SVG externo. -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="icon-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      <path d="m9 12 2 2 4-4"/>
+    </symbol>
+    <symbol id="icon-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/>
+      <rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/>
+      <rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </symbol>
+    <symbol id="icon-file-spreadsheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      <path d="M8 13h2"/>
+      <path d="M14 13h2"/>
+      <path d="M8 17h2"/>
+      <path d="M14 17h2"/>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.3-4.3"/>
+    </symbol>
+    <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 6 6 18"/>
+      <path d="m6 6 12 12"/>
+    </symbol>
+    <symbol id="icon-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h6v6"/>
+      <path d="M10 14 21 3"/>
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+    </symbol>
+    <symbol id="icon-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 17 10 11 4 5"/>
+      <line x1="12" x2="20" y1="19" y2="19"/>
+    </symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+      <path d="M2 12h20"/>
+    </symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 6 9 17l-5-5"/>
+    </symbol>
+    <symbol id="icon-folder-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>
+    </symbol>
+    <symbol id="icon-filter-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13.013 3H2l8 9.46V19l4 2v-8.54l.9-1.055"/>
+      <path d="m22 3-5 5"/>
+      <path d="m17 3 5 5"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="intro-overlay">
+  <div class="intro-stage">
+    <svg class="intro-guide" viewBox="0 0 240 240" aria-hidden="true">
+      <circle class="intro-guide-ring" cx="120" cy="120" r="100" />
+      <circle class="intro-guide-dot" cx="120" cy="20" r="4" />
+      <circle class="intro-guide-dot" cx="220" cy="120" r="4" />
+      <circle class="intro-guide-dot" cx="120" cy="220" r="4" />
+      <circle class="intro-guide-dot" cx="20" cy="120" r="4" />
+    </svg>
+    <div class="intro-logo-stage" id="intro-logo-stage"></div>
+  </div>
+  <p class="intro-caption">Painel DP</p>
+  <button type="button" class="intro-skip" id="intro-skip">Pular</button>
+</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="header-top">
+      <div class="brand-mark" id="nav-logo-mover">
+        <span class="brand-logo-tilt" id="nav-logo-tilt">
+          <img src="LOGO_GBEX_3-removebg-preview.png" alt="Gbex" class="brand-logo-img" />
+        </span>
+      </div>
+      <span class="tool-count" id="tool-count"></span>
+    </div>
+    <h1 class="page-title">Painel DP</h1>
+    <p class="page-subtitle"><span class="rule" aria-hidden="true"></span>GBEX · GBLOG — Departamento Pessoal</p>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="container toolbar-inner">
+    <div class="search-box">
+      <svg aria-hidden="true"><use href="#icon-search"></use></svg>
+      <input type="search" id="search-input" placeholder="Buscar ferramenta…" aria-label="Buscar ferramenta" />
+    </div>
+    <div class="chip-row" id="category-chips" role="group" aria-label="Filtrar por categoria"></div>
+    <div class="status-toggle" id="status-toggle" role="group" aria-label="Filtrar por forma de acesso">
+      <span class="status-indicator" id="status-indicator" aria-hidden="true"></span>
+      <button type="button" class="active" data-status="all">Todas</button>
+      <button type="button" data-status="hosted">Acesso direto</button>
+      <button type="button" data-status="local">Uso local</button>
+    </div>
+    <select class="sort-select" id="sort-select" aria-label="Ordenar por">
+      <option value="order">Padrão</option>
+      <option value="name">Nome (A–Z)</option>
+      <option value="category">Categoria</option>
+    </select>
+  </div>
+</div>
+
+<main>
+  <section class="grid-section container">
+    <div class="grid" id="grid"></div>
+    <div class="empty-state" id="empty-state">
+      <svg aria-hidden="true"><use href="#icon-filter-x"></use></svg>
+      <h3>Nenhuma ferramenta encontrada</h3>
+      <p>Tente outro termo de busca ou ajuste os filtros.</p>
+      <button type="button" class="btn btn-secondary" id="clear-filters">Limpar filtros</button>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  Painel DP · GBEX / GBLOG · Departamento Pessoal — novas ferramentas são adicionadas aqui com o tempo.
+</footer>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-top">
+      <div class="card-icon" id="modal-icon" aria-hidden="true"><svg><use href=""></use></svg></div>
+      <button type="button" class="modal-close" id="modal-close" aria-label="Fechar">
+        <svg aria-hidden="true"><use href="#icon-x"></use></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script src="assets/js/starfield.js"></script>
+<script src="assets/js/tools-data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/intro.js"></script>
+</body>
+</html>
