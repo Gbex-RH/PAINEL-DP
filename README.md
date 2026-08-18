@@ -2,11 +2,23 @@
 
 Hub central de ferramentas do Departamento Pessoal (GBEX / GBLOG). Uma única página estática que reúne o acesso às ferramentas que hoje vivem espalhadas em pastas separadas.
 
-## Como abrir
+**No ar em:** https://painel-dp.netlify.app
 
-Dê duplo clique em `index.html`. Não precisa de servidor, build ou instalação — é HTML/CSS/JS puro.
+## Como publicar uma mudança
 
-Também pode ser hospedado como está (ex.: arrastar a pasta para o Netlify), sem nenhuma alteração.
+O projeto está no GitHub (`Gbex-RH/PAINEL-DP`, branch `main`) conectado ao Netlify por deploy contínuo: todo push em `main` publica sozinho em cerca de 1 minuto, sem passo manual nenhum no Netlify.
+
+```
+git add -A
+git commit -m "descreva a mudança"
+git push
+```
+
+Repositório usa remote SSH (`git@github.com:Gbex-RH/PAINEL-DP.git`) — a autenticação HTTPS do Git ficava bloqueada pelo proxy corporativo da rede, então a chave SSH em `~/.ssh/id_ed25519` (cadastrada na conta GitHub `Gbex-RH`) é o que faz o push funcionar.
+
+## Como abrir localmente
+
+Dê duplo clique em `index.html`. Não precisa de servidor, build ou instalação — é HTML/CSS/JS puro. Útil pra testar uma mudança antes de publicar.
 
 ## Como adicionar uma nova ferramenta
 
