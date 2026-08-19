@@ -66,19 +66,12 @@ const TOOLS = [
     highlight: "100% no navegador",
     version: null,
     order: 30,
-    status: "local",
-    hosted: null,
-    local: {
-      reason: "Ferramenta local para manter os dados de folha 100% offline.",
-      steps: [
-        "Abra um terminal na pasta “AUDITOR DE FOLHA”.",
-        "Rode o comando abaixo.",
-        "O navegador abre em http://localhost:5173.",
-      ],
-      path: "AUDITOR DE FOLHA\\",
-      command: "npm run dev",
-      bestEffortUrl: "http://localhost:5173",
+    status: "hosted",
+    hosted: {
+      url: "https://auditor-de-folha.netlify.app",
+      authNote: null,
     },
+    local: null,
   },
   {
     id: "conversor-folha",
