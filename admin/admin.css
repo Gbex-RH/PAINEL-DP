@@ -37,6 +37,12 @@ h2 { font-size: 1.05rem; margin: 0; }
   justify-content: center;
   padding: 24px;
 }
+/* o "display: flex" acima vale mais que o [hidden] padrão do navegador
+   (regras de autor sempre vencem regras do user-agent) — sem isto aqui,
+   marcar `.hidden = true` no JS não escondia a tela de senha. */
+.gate-screen[hidden] {
+  display: none;
+}
 .gate-card {
   width: 100%;
   max-width: 360px;
