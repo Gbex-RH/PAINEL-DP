@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin — Painel DP</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<div id="gate-screen" class="gate-screen">
+  <form id="gate-form" class="gate-card">
+    <h1>Painel DP — Admin</h1>
+    <p class="muted">Entre com a senha de administrador para adicionar, editar ou remover ferramentas.</p>
+    <label for="gate-password">Senha</label>
+    <input type="password" id="gate-password" name="password" autocomplete="current-password" required />
+    <button type="submit" class="btn-primary">Entrar</button>
+    <p id="gate-error" class="error-msg" hidden></p>
+  </form>
+</div>
+
+<div id="admin-app" class="admin-app" hidden>
+  <header class="admin-header">
+    <div>
+      <h1>Painel DP — Admin</h1>
+      <p class="muted">Mudanças aqui são commitadas no GitHub e publicadas no Netlify automaticamente (~1 min).</p>
+    </div>
+    <a href="../index.html" class="btn-secondary" target="_blank" rel="noopener">Ver painel público</a>
+  </header>
+
+  <div class="admin-layout">
+    <section class="tools-panel">
+      <div class="tools-panel-head">
+        <h2>Ferramentas</h2>
+        <button type="button" id="btn-new-tool" class="btn-primary">+ Nova ferramenta</button>
+      </div>
+      <div id="tools-list" class="tools-list"></div>
+    </section>
+
+    <section class="form-panel">
+      <h2 id="form-title">Nova ferramenta</h2>
+      <form id="tool-form">
+        <div class="field">
+          <label for="f-name">Nome</label>
+          <input type="text" id="f-name" required />
+        </div>
+
+        <div class="field">
+          <label for="f-id">Id (gerado a partir do nome, não muda depois de criado)</label>
+          <input type="text" id="f-id" disabled />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-category">Categoria</label>
+            <input type="text" id="f-category" list="category-options" required />
+            <datalist id="category-options"></datalist>
+          </div>
+          <div class="field">
+            <label for="f-icon">Ícone</label>
+            <select id="f-icon">
+              <option value="layout-dashboard">layout-dashboard</option>
+              <option value="clock">clock</option>
+              <option value="shield-check">shield-check</option>
+              <option value="file-spreadsheet">file-spreadsheet</option>
+              <option value="search">search</option>
+              <option value="terminal">terminal</option>
+              <option value="globe">globe</option>
+              <option value="folder-open">folder-open</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-description">Descrição</label>
+          <textarea id="f-description" rows="3" required></textarea>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-tags">Tags de busca (separadas por vírgula)</label>
+            <input type="text" id="f-tags" placeholder="ex: folha, auditoria, inss" />
+          </div>
+          <div class="field">
+            <label for="f-highlight">Trecho a destacar (opcional, deve existir na descrição)</label>
+            <input type="text" id="f-highlight" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-version">Versão (opcional)</label>
+            <input type="text" id="f-version" placeholder="ex: v75" />
+          </div>
+          <div class="field">
+            <label for="f-order">Ordem (menor aparece primeiro em "Padrão")</label>
+            <input type="number" id="f-order" step="1" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-status">Forma de acesso</label>
+          <select id="f-status">
+            <option value="hosted">Acesso direto (tem URL fixa)</option>
+            <option value="local">Uso local (precisa iniciar na máquina)</option>
+          </select>
+        </div>
+
+        <fieldset id="fieldset-hosted" class="subfields">
+          <div class="field">
+            <label for="f-hosted-url">URL</label>
+            <input type="text" id="f-hosted-url" placeholder="https://exemplo.netlify.app" />
+          </div>
+          <div class="field">
+            <label for="f-hosted-authnote">Observação de acesso (opcional)</label>
+            <input type="text" id="f-hosted-authnote" placeholder="ex: Requer login (Firebase)" />
+          </div>
+        </fieldset>
+
+        <fieldset id="fieldset-local" class="subfields">
+          <div class="field">
+            <label for="f-local-reason">Motivo de ser local</label>
+            <textarea id="f-local-reason" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label for="f-local-steps">Passo a passo (um passo por linha)</label>
+            <textarea id="f-local-steps" rows="4" placeholder="Abra a pasta...&#10;Dê duplo clique em...&#10;O navegador abre em..."></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-local-path">Caminho (arquivo ou pasta)</label>
+              <input type="text" id="f-local-path" />
+            </div>
+            <div class="field">
+              <label for="f-local-command">Comando (opcional, se não for só abrir um arquivo)</label>
+              <input type="text" id="f-local-command" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-local-besteffort">URL de melhor esforço (se já estiver rodando)</label>
+            <input type="text" id="f-local-besteffort" placeholder="http://127.0.0.1:7327" />
+          </div>
+        </fieldset>
+
+        <p id="form-error" class="error-msg" hidden></p>
+        <p id="form-success" class="success-msg" hidden></p>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Salvar</button>
+          <button type="button" id="btn-delete-tool" class="btn-danger" hidden>Excluir ferramenta</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

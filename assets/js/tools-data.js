@@ -1,8 +1,19 @@
 /**
  * Cada ferramenta do Painel DP é um objeto neste array.
- * Para adicionar uma nova ferramenta, basta acrescentar um objeto aqui —
- * nada em app.js, styles.css ou index.html precisa mudar (categorias e
- * filtros são gerados a partir destes dados).
+ *
+ * Formas de adicionar uma nova ferramenta (nenhum outro arquivo precisa
+ * mudar — categorias, filtros e contagem são gerados a partir destes dados):
+ *
+ *   1. Pelo painel /admin (recomendado): abra /admin no site publicado,
+ *      entre com a senha de administrador e use o formulário. Ele grava
+ *      este arquivo direto no GitHub e o Netlify publica sozinho.
+ *   2. Editando este arquivo à mão e dando `git push` (veja README.md).
+ *
+ * IMPORTANTE: o conteúdo entre os marcadores __TOOLS_JSON_START__ e
+ * __TOOLS_JSON_END__ é JSON puro (chaves entre aspas, sem comentários,
+ * sem vírgula sobrando) — é isso que permite a função do backend
+ * (netlify/functions/tools.js) ler e regravar este arquivo automaticamente.
+ * Se editar à mão, mantenha essa área como JSON válido.
  *
  * Campos:
  *   id          slug estável (kebab-case) — usado em ids do DOM e no modal
@@ -10,7 +21,7 @@
  *   description descrição curta (2-3 linhas no card, completa no modal)
  *   category    texto livre — vira automaticamente um chip de filtro
  *   tags        palavras extras usadas só na busca (opcional)
- *   icon        chave de um <symbol id="icon-KEY"> em assets/icons/icons.svg
+ *   icon        chave de um <symbol id="icon-...">  já definido em index.html
  *   highlight   trecho literal de "description" a destacar com a cor de marca (opcional)
  *   version     rótulo de versão opcional, mostrado como legenda
  *   order       peso de ordenação manual ("Padrão")
@@ -18,84 +29,80 @@
  *   hosted      { url, authNote? } — obrigatório quando status === "hosted"
  *   local       { reason, steps[], path, command, bestEffortUrl } — obrigatório quando status === "local"
  */
-const TOOLS = [
+const TOOLS = /*__TOOLS_JSON_START__*/[
   {
-    id: "dashboard-rh",
-    name: "Dashboard RH Guanabara Express",
-    description:
-      "Painel completo de RH: headcount, salários, licenças, faltas, horas extras, comissões, turnover, CCT e custo de motoristas — GBEX e GBLOG.",
-    category: "Dashboard Gerencial",
-    tags: ["rh", "headcount", "turnover", "cct", "salarios"],
-    icon: "layout-dashboard",
-    highlight: "Painel completo de RH",
-    version: "v75",
-    order: 10,
-    status: "hosted",
-    hosted: {
-      url: "https://rh-guanabara.netlify.app",
-      authNote: "Requer login (Firebase)",
+    "id": "dashboard-rh",
+    "name": "Dashboard RH Guanabara Express",
+    "description": "Painel completo de RH: headcount, salários, licenças, faltas, horas extras, comissões, turnover, CCT e custo de motoristas — GBEX e GBLOG.",
+    "category": "Dashboard Gerencial",
+    "tags": ["rh", "headcount", "turnover", "cct", "salarios"],
+    "icon": "layout-dashboard",
+    "highlight": "Painel completo de RH",
+    "version": "v75",
+    "order": 10,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://rh-guanabara.netlify.app",
+      "authNote": "Requer login (Firebase)"
     },
-    local: null,
+    "local": null
   },
   {
-    id: "controle-ponto",
-    name: "Controle de Ponto",
-    description:
-      "Gestão de pendências de ponto em 4 abas: Pendências, Meus Lançamentos, Auditoria e Validação.",
-    category: "Ponto Eletrônico",
-    tags: ["ponto", "batidas", "afdt", "fortes"],
-    icon: "clock",
-    highlight: "4 abas",
-    version: "v70",
-    order: 20,
-    status: "hosted",
-    hosted: {
-      url: "https://ponto-rh.netlify.app",
-      authNote: null,
+    "id": "controle-ponto",
+    "name": "Controle de Ponto",
+    "description": "Gestão de pendências de ponto em 4 abas: Pendências, Meus Lançamentos, Auditoria e Validação.",
+    "category": "Ponto Eletrônico",
+    "tags": ["ponto", "batidas", "afdt", "fortes"],
+    "icon": "clock",
+    "highlight": "4 abas",
+    "version": "v70",
+    "order": 20,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://ponto-rh.netlify.app",
+      "authNote": null
     },
-    local: null,
+    "local": null
   },
   {
-    id: "auditor-folha",
-    name: "Auditor de Folha",
-    description:
-      "Audita a folha de pagamento mensal (Fortes Pessoal) por filial, cruzando com o mês anterior e a CCT vigente. Roda 100% no navegador — nenhum dado sai da máquina.",
-    category: "Folha de Pagamento",
-    tags: ["folha", "auditoria", "inss", "fgts", "irrf", "offline"],
-    icon: "shield-check",
-    highlight: "100% no navegador",
-    version: null,
-    order: 30,
-    status: "hosted",
-    hosted: {
-      url: "https://auditor-de-folha.netlify.app",
-      authNote: null,
+    "id": "auditor-folha",
+    "name": "Auditor de Folha",
+    "description": "Audita a folha de pagamento mensal (Fortes Pessoal) por filial, cruzando com o mês anterior e a CCT vigente. Roda 100% no navegador — nenhum dado sai da máquina.",
+    "category": "Folha de Pagamento",
+    "tags": ["folha", "auditoria", "inss", "fgts", "irrf", "offline"],
+    "icon": "shield-check",
+    "highlight": "100% no navegador",
+    "version": null,
+    "order": 30,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://auditor-de-folha.netlify.app",
+      "authNote": null
     },
-    local: null,
+    "local": null
   },
   {
-    id: "conversor-folha",
-    name: "Conversor de Folha",
-    description:
-      "Converte o relatório de folha de pagamento (PDF, Fortes) em Markdown ou CSV, conferindo a aritmética do documento durante a conversão.",
-    category: "Folha de Pagamento",
-    tags: ["folha", "pdf", "markdown", "csv", "conversor"],
-    icon: "file-spreadsheet",
-    highlight: "conferindo a aritmética",
-    version: null,
-    order: 40,
-    status: "local",
-    hosted: null,
-    local: {
-      reason: "Servidor local próprio: o PDF é lido inteiramente no navegador, sem enviar dados a lugar nenhum.",
-      steps: [
+    "id": "conversor-folha",
+    "name": "Conversor de Folha",
+    "description": "Converte o relatório de folha de pagamento (PDF, Fortes) em Markdown ou CSV, conferindo a aritmética do documento durante a conversão.",
+    "category": "Folha de Pagamento",
+    "tags": ["folha", "pdf", "markdown", "csv", "conversor"],
+    "icon": "file-spreadsheet",
+    "highlight": "conferindo a aritmética",
+    "version": null,
+    "order": 40,
+    "status": "local",
+    "hosted": null,
+    "local": {
+      "reason": "Servidor local próprio: o PDF é lido inteiramente no navegador, sem enviar dados a lugar nenhum.",
+      "steps": [
         "Abra a pasta “PROJETO MD\\files(4)\\conversor-folha”.",
         "Dê duplo clique em “iniciar.bat”.",
-        "O navegador abre sozinho em http://127.0.0.1:7327.",
+        "O navegador abre sozinho em http://127.0.0.1:7327."
       ],
-      path: "PROJETO MD\\files(4)\\conversor-folha\\iniciar.bat",
-      command: null,
-      bestEffortUrl: "http://127.0.0.1:7327",
-    },
-  },
-];
+      "path": "PROJETO MD\\files(4)\\conversor-folha\\iniciar.bat",
+      "command": null,
+      "bestEffortUrl": "http://127.0.0.1:7327"
+    }
+  }
+]/*__TOOLS_JSON_END__*/;
