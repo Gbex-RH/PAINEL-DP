@@ -35,7 +35,13 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "name": "Dashboard RH Guanabara Express",
     "description": "Painel completo de RH: headcount, salários, licenças, faltas, horas extras, comissões, turnover, CCT e custo de motoristas — GBEX e GBLOG.",
     "category": "Dashboard Gerencial",
-    "tags": ["rh", "headcount", "turnover", "cct", "salarios"],
+    "tags": [
+      "rh",
+      "headcount",
+      "turnover",
+      "cct",
+      "salarios"
+    ],
     "icon": "layout-dashboard",
     "highlight": "Painel completo de RH",
     "version": "v75",
@@ -52,7 +58,12 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "name": "Controle de Ponto",
     "description": "Gestão de pendências de ponto em 4 abas: Pendências, Meus Lançamentos, Auditoria e Validação.",
     "category": "Ponto Eletrônico",
-    "tags": ["ponto", "batidas", "afdt", "fortes"],
+    "tags": [
+      "ponto",
+      "batidas",
+      "afdt",
+      "fortes"
+    ],
     "icon": "clock",
     "highlight": "4 abas",
     "version": "v70",
@@ -69,7 +80,14 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "name": "Auditor de Folha",
     "description": "Audita a folha de pagamento mensal (Fortes Pessoal) por filial, cruzando com o mês anterior e a CCT vigente. Roda 100% no navegador — nenhum dado sai da máquina.",
     "category": "Folha de Pagamento",
-    "tags": ["folha", "auditoria", "inss", "fgts", "irrf", "offline"],
+    "tags": [
+      "folha",
+      "auditoria",
+      "inss",
+      "fgts",
+      "irrf",
+      "offline"
+    ],
     "icon": "shield-check",
     "highlight": "100% no navegador",
     "version": null,
@@ -86,7 +104,13 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "name": "Conversor de Folha",
     "description": "Converte o relatório de folha de pagamento (PDF, Fortes) em Markdown ou CSV, conferindo a aritmética do documento durante a conversão.",
     "category": "Folha de Pagamento",
-    "tags": ["folha", "pdf", "markdown", "csv", "conversor"],
+    "tags": [
+      "folha",
+      "pdf",
+      "markdown",
+      "csv",
+      "conversor"
+    ],
     "icon": "file-spreadsheet",
     "highlight": "conferindo a aritmética",
     "version": null,
@@ -104,5 +128,30 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
       "command": null,
       "bestEffortUrl": "http://127.0.0.1:7327"
     }
+  },
+  {
+    "id": "assinador-de-documentos",
+    "name": "Assinador de Documentos",
+    "description": "Essa ferramenta assina documentos utilizando o certificado digital da empresa, disponibiliza-os aos funcionários para coleta de assinatura e, em seguida, os arquiva digitalmente após assinados.",
+    "category": "Ferramenta",
+    "tags": [
+      "assina",
+      "assinatura",
+      "assinador",
+      "documentos",
+      "contratos",
+      "certificado",
+      "asina"
+    ],
+    "icon": "file-spreadsheet",
+    "highlight": null,
+    "version": null,
+    "order": 50,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://assinador-rh.netlify.app/",
+      "authNote": null
+    },
+    "local": null
   }
 ]/*__TOOLS_JSON_END__*/;
