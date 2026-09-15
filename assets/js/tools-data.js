@@ -170,7 +170,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "folder-open",
     "highlight": null,
     "version": null,
-    "order": 60,
+    "order": 30,
     "status": "hosted",
     "hosted": {
       "url": "https://trello.com/b/PEWiotWR/admissao",
