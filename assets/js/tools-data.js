@@ -153,5 +153,29 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
       "authNote": null
     },
     "local": null
+  },
+  {
+    "id": "trello",
+    "name": "Trello",
+    "description": "O quadro do Trello é o nosso controle centralizado de admissões. Nele vocês acompanham o status de cada candidato, desde o início do processo até a efetivação, e identificam rapidamente onde cada admissão está parada ou o que falta para concluir.",
+    "category": "Dashboard Gerencial",
+    "tags": [
+      "trelo",
+      "trello",
+      "quadro",
+      "admitido",
+      "empregado",
+      "empregados"
+    ],
+    "icon": "folder-open",
+    "highlight": null,
+    "version": null,
+    "order": 60,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://trello.com/b/PEWiotWR/admissao",
+      "authNote": null
+    },
+    "local": null
   }
 ]/*__TOOLS_JSON_END__*/;
