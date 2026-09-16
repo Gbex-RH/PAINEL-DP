@@ -48,7 +48,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "order": 10,
     "status": "hosted",
     "hosted": {
-      "url": "https://rh-guanabara.netlify.app",
+      "url": "https://gestor.gbex.app.br/rh/",
       "authNote": "Requer login (Firebase)"
     },
     "local": null
