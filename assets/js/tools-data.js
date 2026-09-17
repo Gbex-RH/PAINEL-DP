@@ -94,7 +94,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "shield-check",
     "highlight": "100% no navegador",
     "version": null,
-    "cardSize": "medium",
+    "cardSize": "small",
     "order": 30,
     "status": "hosted",
     "hosted": {
