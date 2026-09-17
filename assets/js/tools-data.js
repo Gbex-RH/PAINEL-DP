@@ -151,6 +151,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "file-spreadsheet",
     "highlight": null,
     "version": null,
+    "cardSize": "small",
     "order": 50,
     "status": "hosted",
     "hosted": {
