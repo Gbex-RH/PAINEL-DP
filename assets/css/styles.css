@@ -414,6 +414,51 @@ svg {
   animation-delay: calc(var(--i, 0) * 70ms);
   will-change: transform;
 }
+.card--small {
+  min-height: 210px;
+  padding: var(--sp-4);
+  gap: var(--sp-2);
+}
+.card--medium {
+  min-height: 270px;
+}
+.card--large {
+  min-height: 350px;
+  padding: var(--sp-6);
+  gap: var(--sp-4);
+}
+.card--small .card-icon {
+  width: 40px;
+  height: 40px;
+}
+.card--small .card-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.card--small .card-title {
+  font-size: 18px;
+}
+.card--large .card-icon {
+  width: 58px;
+  height: 58px;
+}
+.card--large .card-icon svg {
+  width: 29px;
+  height: 29px;
+}
+.card--large .card-title {
+  font-size: 24px;
+}
+.card--large .card-desc {
+  font-size: 15px;
+}
+@media (max-width: 620px) {
+  .card--small,
+  .card--medium,
+  .card--large {
+    min-height: 0;
+  }
+}
 .card::before {
   content: "";
   position: absolute;

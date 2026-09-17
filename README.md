@@ -53,6 +53,8 @@ Cada ferramenta tem um `status`:
 
 O campo `icon` (chave de um `<symbol id="icon-...">` já definido no início de `index.html`) controla o ícone do card; a cor é sempre o azul de marca (não há mais cor por card). Se precisar de um ícone novo, adicione o `<symbol>` correspondente no sprite inline do `index.html` (mantenha os SVGs inline — evita depender de carregar um arquivo `.svg` externo via `file://`, o que é inconsistente entre navegadores).
 
+O campo `cardSize` define o destaque visual do card: `"small"`, `"medium"` ou `"large"`. Pelo `/admin`, use a opção **Tamanho do card no painel**. Em telas pequenas, os tamanhos se adaptam para evitar espaços excessivos.
+
 ## Identidade visual
 
 Direção "Constelação" (escolhida a partir de um mockup de referência): fundo escuro com um campo de estrelas em canvas (`assets/js/starfield.js`), cards em vidro fosco num grid tipo masonry (`columns` em CSS, sem JS de layout), tipografia grande com tracking negativo.

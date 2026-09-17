@@ -113,7 +113,8 @@
 
   function createCardElement(tool, index) {
     var card = document.createElement("article");
-    card.className = "card";
+    var cardSize = ["small", "medium", "large"].indexOf(tool.cardSize) !== -1 ? tool.cardSize : "medium";
+    card.className = "card card--" + cardSize;
     card.style.setProperty("--i", index);
 
     var actionsHtml;

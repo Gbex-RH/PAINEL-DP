@@ -24,6 +24,7 @@
  *   icon        chave de um <symbol id="icon-...">  já definido em index.html
  *   highlight   trecho literal de "description" a destacar com a cor de marca (opcional)
  *   version     rótulo de versão opcional, mostrado como legenda
+ *   cardSize    tamanho visual do card: "small", "medium" ou "large"
  *   order       peso de ordenação manual ("Padrão")
  *   status      "hosted" (tem URL fixa) ou "local" (precisa ser iniciada na máquina)
  *   hosted      { url, authNote? } — obrigatório quando status === "hosted"
@@ -45,6 +46,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "layout-dashboard",
     "highlight": "Painel completo de RH",
     "version": "v75",
+    "cardSize": "medium",
     "order": 10,
     "status": "hosted",
     "hosted": {
@@ -67,6 +69,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "clock",
     "highlight": "4 abas",
     "version": "v70",
+    "cardSize": "medium",
     "order": 20,
     "status": "hosted",
     "hosted": {
@@ -91,6 +94,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "shield-check",
     "highlight": "100% no navegador",
     "version": null,
+    "cardSize": "medium",
     "order": 30,
     "status": "hosted",
     "hosted": {
@@ -114,6 +118,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "file-spreadsheet",
     "highlight": "conferindo a aritmética",
     "version": null,
+    "cardSize": "medium",
     "order": 40,
     "status": "local",
     "hosted": null,

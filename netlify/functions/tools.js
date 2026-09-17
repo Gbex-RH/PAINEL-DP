@@ -147,6 +147,7 @@ function validateTool(tool) {
   if (!tool.description || !tool.description.trim()) errors.push("Descrição é obrigatória.");
   if (!tool.category || !tool.category.trim()) errors.push("Categoria é obrigatória.");
   if (!ALLOWED_ICONS.includes(tool.icon)) errors.push("Ícone inválido.");
+  if (!["small", "medium", "large"].includes(tool.cardSize)) errors.push("Tamanho de card inválido.");
   if (tool.status !== "hosted" && tool.status !== "local") errors.push("Status deve ser 'hosted' ou 'local'.");
 
   if (tool.status === "hosted") {
@@ -185,6 +186,7 @@ function buildToolRecord(input, existing) {
     icon: input.icon,
     highlight: input.highlight ? input.highlight.trim() : null,
     version: input.version ? input.version.trim() : null,
+    cardSize: ["small", "medium", "large"].includes(input.cardSize) ? input.cardSize : "medium",
     order: Number.isFinite(Number(input.order)) ? Number(input.order) : 999,
     status,
     hosted: null,

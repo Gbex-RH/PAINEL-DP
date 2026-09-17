@@ -126,6 +126,7 @@
     $("f-id").value = "(gerado ao salvar)";
     $("f-status").value = "hosted";
     $("f-icon").value = "layout-dashboard";
+    $("f-card-size").value = "medium";
     const maxOrder = state.tools.reduce((max, t) => Math.max(max, t.order || 0), 0);
     $("f-order").value = maxOrder + 10;
     $("btn-delete-tool").hidden = true;
@@ -149,6 +150,7 @@
     $("f-tags").value = (tool.tags || []).join(", ");
     $("f-highlight").value = tool.highlight || "";
     $("f-version").value = tool.version || "";
+    $("f-card-size").value = tool.cardSize || "medium";
     $("f-order").value = tool.order;
     $("f-status").value = tool.status;
 
@@ -176,6 +178,7 @@
       tags: $("f-tags").value.split(",").map((t) => t.trim()).filter(Boolean),
       highlight: $("f-highlight").value,
       version: $("f-version").value,
+      cardSize: $("f-card-size").value,
       order: $("f-order").value,
       status,
       hosted: {
