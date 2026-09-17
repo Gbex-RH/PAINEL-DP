@@ -118,7 +118,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "file-spreadsheet",
     "highlight": "conferindo a aritmética",
     "version": null,
-    "cardSize": "medium",
+    "cardSize": "small",
     "order": 40,
     "status": "local",
     "hosted": null,
