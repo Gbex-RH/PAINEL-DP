@@ -69,7 +69,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "clock",
     "highlight": "4 abas",
     "version": "v70",
-    "cardSize": "medium",
+    "cardSize": "small",
     "order": 20,
     "status": "hosted",
     "hosted": {
