@@ -175,7 +175,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "folder-open",
     "highlight": null,
     "version": null,
-    "cardSize": "small",
+    "cardSize": "large",
     "order": 10,
     "status": "hosted",
     "hosted": {
