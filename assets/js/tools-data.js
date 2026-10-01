@@ -184,5 +184,32 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
       "authNote": null
     },
     "local": null
+  },
+  {
+    "id": "gbex-integra",
+    "name": "GBEX INTEGRA",
+    "description": "O portal GBEX Integra tem como objetivo centralizar, em um único lugar, a comunicação entre gestores, RH e candidatos durante o processo de admissão.\n\nNo portal, serão cadastradas as vagas, informações e requisitos das posições, além dos benefícios oferecidos.\n\nO gestor poderá solicitar uma nova vaga diretamente pelo portal, enquanto o RH acompanhará todo o processo de recrutamento e admissão. Dessa forma, o andamento de cada contratação ficará visível, permitindo um acompanhamento mais organizado e transparente de todo o processo.",
+    "category": "Dashboard Gerencial",
+    "tags": [
+      "admissão",
+      "admissao",
+      "contratação",
+      "vaga",
+      "integra",
+      "gbex",
+      "gestor",
+      "candidato"
+    ],
+    "icon": "layout-dashboard",
+    "highlight": null,
+    "version": null,
+    "cardSize": "medium",
+    "order": 60,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://integra.gbex.app.br/index.php",
+      "authNote": null
+    },
+    "local": null
   }
 ]/*__TOOLS_JSON_END__*/;
