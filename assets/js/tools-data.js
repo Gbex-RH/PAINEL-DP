@@ -203,7 +203,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "layout-dashboard",
     "highlight": null,
     "version": null,
-    "cardSize": "medium",
+    "cardSize": "small",
     "order": 60,
     "status": "hosted",
     "hosted": {
