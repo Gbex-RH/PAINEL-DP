@@ -414,10 +414,20 @@ svg {
   animation-delay: calc(var(--i, 0) * 70ms);
   will-change: transform;
 }
-.card--small {
-  min-height: 210px;
+.card--tiny {
+  min-height: 130px;
+  padding: var(--sp-3);
+  gap: 6px;
+}
+.card--compact {
+  min-height: 170px;
   padding: var(--sp-4);
   gap: var(--sp-2);
+}
+.card--small {
+  min-height: 220px;
+  padding: var(--sp-4);
+  gap: var(--sp-3);
 }
 .card--medium {
   min-height: 270px;
@@ -427,16 +437,46 @@ svg {
   padding: var(--sp-6);
   gap: var(--sp-4);
 }
+.card--tiny .card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+}
+.card--tiny .card-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.card--tiny .card-title {
+  font-size: 15px;
+}
+.card--tiny .card-desc {
+  display: none;
+}
+.card--tiny .card-meta {
+  display: none;
+}
+.card--tiny .card-actions {
+  padding-top: 0;
+}
+.card--compact .card-icon,
 .card--small .card-icon {
   width: 40px;
   height: 40px;
 }
+.card--compact .card-icon svg,
 .card--small .card-icon svg {
   width: 20px;
   height: 20px;
 }
+.card--compact .card-title,
 .card--small .card-title {
   font-size: 18px;
+}
+.card--compact .card-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 .card--large .card-icon {
   width: 58px;
@@ -453,6 +493,8 @@ svg {
   font-size: 15px;
 }
 @media (max-width: 620px) {
+  .card--tiny,
+  .card--compact,
   .card--small,
   .card--medium,
   .card--large {

@@ -53,7 +53,7 @@ Cada ferramenta tem um `status`:
 
 O campo `icon` (chave de um `<symbol id="icon-...">` já definido no início de `index.html`) controla o ícone do card; a cor é sempre o azul de marca (não há mais cor por card). Se precisar de um ícone novo, adicione o `<symbol>` correspondente no sprite inline do `index.html` (mantenha os SVGs inline — evita depender de carregar um arquivo `.svg` externo via `file://`, o que é inconsistente entre navegadores).
 
-O campo `cardSize` define o destaque visual do card: `"small"`, `"medium"` ou `"large"`. Pelo `/admin`, use a opção **Tamanho do card no painel**. Em telas pequenas, os tamanhos se adaptam para evitar espaços excessivos.
+O campo `cardSize` define o destaque visual do card: `"tiny"`, `"compact"`, `"small"`, `"medium"` ou `"large"`. Pelo `/admin`, use a opção **Tamanho do card no painel**. O tamanho muito pequeno oculta descrição e versão; o compacto limita a descrição a duas linhas. Em telas pequenas, as alturas se adaptam para evitar espaços excessivos.
 
 ## Identidade visual
 

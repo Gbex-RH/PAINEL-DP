@@ -24,7 +24,7 @@
  *   icon        chave de um <symbol id="icon-...">  já definido em index.html
  *   highlight   trecho literal de "description" a destacar com a cor de marca (opcional)
  *   version     rótulo de versão opcional, mostrado como legenda
- *   cardSize    tamanho visual do card: "small", "medium" ou "large"
+ *   cardSize    tamanho visual: "tiny", "compact", "small", "medium" ou "large"
  *   order       peso de ordenação manual ("Padrão")
  *   status      "hosted" (tem URL fixa) ou "local" (precisa ser iniciada na máquina)
  *   hosted      { url, authNote? } — obrigatório quando status === "hosted"
