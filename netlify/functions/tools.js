@@ -138,6 +138,15 @@ function slugify(str) {
 
 const FORBIDDEN_SUBSTRINGS = ["__TOOLS_JSON_START__", "__TOOLS_JSON_END__"];
 
+function isHttpUrl(value) {
+  try {
+    const u = new URL(String(value || "").trim());
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function validateTool(tool) {
   const errors = [];
   if (FORBIDDEN_SUBSTRINGS.some((s) => JSON.stringify(tool).includes(s))) {
@@ -147,13 +156,18 @@ function validateTool(tool) {
   if (!tool.description || !tool.description.trim()) errors.push("Descrição é obrigatória.");
   if (!tool.category || !tool.category.trim()) errors.push("Categoria é obrigatória.");
   if (!ALLOWED_ICONS.includes(tool.icon)) errors.push("Ícone inválido.");
-  if (!["small", "medium", "large"].includes(tool.cardSize)) errors.push("Tamanho de card inválido.");
+  if (!["tiny", "compact", "small", "medium", "large"].includes(tool.cardSize)) errors.push("Tamanho de card inválido.");
   if (tool.status !== "hosted" && tool.status !== "local") errors.push("Status deve ser 'hosted' ou 'local'.");
 
+  if (/[<>]/.test(JSON.stringify(tool))) errors.push("Os campos não podem conter os caracteres < ou >.");
+
   if (tool.status === "hosted") {
-    if (!tool.hosted || !tool.hosted.url || !/^https?:\/\//.test(tool.hosted.url)) {
+    if (!tool.hosted || !isHttpUrl(tool.hosted.url)) {
       errors.push("URL da ferramenta hospedada é obrigatória e deve começar com http(s)://.");
     }
+  }
+  if (tool.status === "local" && tool.local && tool.local.bestEffortUrl && !isHttpUrl(tool.local.bestEffortUrl)) {
+    errors.push("O endereço 'se já estiver rodando' deve começar com http(s)://.");
   }
 
   if (tool.status === "local") {
@@ -186,7 +200,7 @@ function buildToolRecord(input, existing) {
     icon: input.icon,
     highlight: input.highlight ? input.highlight.trim() : null,
     version: input.version ? input.version.trim() : null,
-    cardSize: ["small", "medium", "large"].includes(input.cardSize) ? input.cardSize : "medium",
+    cardSize: ["tiny", "compact", "small", "medium", "large"].includes(input.cardSize) ? input.cardSize : "medium",
     order: Number.isFinite(Number(input.order)) ? Number(input.order) : 999,
     status,
     hosted: null,

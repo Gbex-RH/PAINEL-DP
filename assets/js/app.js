@@ -57,8 +57,22 @@
     return list;
   }
 
+  function esc(v) {
+    return String(v == null ? "" : v)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  // só aceita http(s); qualquer outra coisa (javascript:, data:...) vira "#"
+  function safeUrl(u) {
+    return /^https?:\/\//i.test(String(u || "").trim()) ? esc(String(u).trim()) : "#";
+  }
+
   function iconSvg(iconKey) {
-    return '<svg aria-hidden="true"><use href="#icon-' + iconKey + '"></use></svg>';
+    return '<svg aria-hidden="true"><use href="#icon-' + esc(iconKey) + '"></use></svg>';
   }
 
   function badgeInfo(tool) {
@@ -74,11 +88,12 @@
   }
 
   function withHighlight(text, highlight) {
-    if (!highlight) return text;
+    text = String(text || "");
+    if (!highlight) return esc(text);
     var idx = text.indexOf(highlight);
-    if (idx === -1) return text;
+    if (idx === -1) return esc(text);
     return (
-      text.slice(0, idx) + '<span class="hl">' + highlight + "</span>" + text.slice(idx + highlight.length)
+      esc(text.slice(0, idx)) + '<span class="hl">' + esc(highlight) + "</span>" + esc(text.slice(idx + highlight.length))
     );
   }
 
@@ -113,7 +128,7 @@
 
   function createCardElement(tool, index) {
     var card = document.createElement("article");
-    var cardSize = ["small", "medium", "large"].indexOf(tool.cardSize) !== -1 ? tool.cardSize : "medium";
+    var cardSize = ["tiny", "compact", "small", "medium", "large"].indexOf(tool.cardSize) !== -1 ? tool.cardSize : "medium";
     card.className = "card card--" + cardSize;
     card.style.setProperty("--i", index);
 
@@ -121,7 +136,7 @@
     if (tool.status === "hosted") {
       actionsHtml =
         '<a class="card-open" href="' +
-        tool.hosted.url +
+        safeUrl(tool.hosted.url) +
         '" target="_blank" rel="noopener">Abrir' +
         iconSvg("external-link") +
         "</a>";
@@ -130,8 +145,8 @@
     }
 
     var metaBits = [];
-    if (tool.version) metaBits.push("Versão " + tool.version);
-    if (tool.status === "hosted" && tool.hosted.authNote) metaBits.push(tool.hosted.authNote);
+    if (tool.version) metaBits.push("Versão " + esc(tool.version));
+    if (tool.status === "hosted" && tool.hosted.authNote) metaBits.push(esc(tool.hosted.authNote));
     var authNoteHtml = metaBits.length ? '<div class="card-meta">' + metaBits.join(" · ") + "</div>" : "";
 
     card.innerHTML =
@@ -142,7 +157,7 @@
       badgeHtml(tool) +
       "</div>" +
       '<h3 class="card-title">' +
-      tool.name +
+      esc(tool.name) +
       "</h3>" +
       '<p class="card-desc">' +
       withHighlight(tool.description, tool.highlight) +
@@ -174,7 +189,7 @@
     var categories = getCategories();
     var html = '<button type="button" class="chip active" data-category="all">Todas</button>';
     categories.forEach(function (c) {
-      html += '<button type="button" class="chip" data-category="' + c + '">' + c + "</button>";
+      html += '<button type="button" class="chip" data-category="' + esc(c) + '">' + esc(c) + "</button>";
     });
     container.innerHTML = html;
 
@@ -215,12 +230,12 @@
 
   function modalActionArea(tool) {
     if (tool.status === "hosted") {
-      var authNote = tool.hosted.authNote ? '<p class="note">' + tool.hosted.authNote + "</p>" : "";
+      var authNote = tool.hosted.authNote ? '<p class="note">' + esc(tool.hosted.authNote) + "</p>" : "";
       return (
         authNote +
         '<div class="modal-actions">' +
         '<a class="btn-outline" href="' +
-        tool.hosted.url +
+        safeUrl(tool.hosted.url) +
         '" target="_blank" rel="noopener">Acessar' +
         iconSvg("external-link") +
         "</a>" +
@@ -231,7 +246,7 @@
 
     var stepsHtml = tool.local.steps
       .map(function (s) {
-        return "<li>" + s + "</li>";
+        return "<li>" + esc(s) + "</li>";
       })
       .join("");
 
@@ -241,10 +256,10 @@
     var commandRow =
       '<div class="code-row">' +
       '<div class="code-block">' +
-      copyTarget +
+      esc(copyTarget) +
       "</div>" +
       '<button type="button" class="copy-btn" data-copy="' +
-      copyTarget +
+      esc(copyTarget) +
       '" aria-label="' +
       copyLabel +
       '">' +
@@ -254,7 +269,7 @@
 
     return (
       '<p class="note">' +
-      tool.local.reason +
+      esc(tool.local.reason) +
       "</p>" +
       '<ol class="modal-steps">' +
       stepsHtml +
@@ -263,7 +278,7 @@
       '<div class="best-effort">' +
       "<p>Se já estiver rodando: " +
       '<a href="' +
-      tool.local.bestEffortUrl +
+      safeUrl(tool.local.bestEffortUrl) +
       '" target="_blank" rel="noopener">abrir agora</a></p>' +
       '<p class="note">Só funciona se o servidor já estiver aberto na sua máquina — se der erro de conexão, é só iniciar pelos passos acima.</p>' +
       "</div>"
@@ -273,15 +288,15 @@
   function modalContent(tool) {
     var b = badgeInfo(tool);
     var metaBits = [];
-    if (tool.version) metaBits.push("Versão " + tool.version);
+    if (tool.version) metaBits.push("Versão " + esc(tool.version));
     var metaHtml = metaBits.length ? '<span class="modal-meta">' + metaBits.join(" · ") + "</span>" : "";
 
     return (
       '<div class="modal-category">' +
-      tool.category +
+      esc(tool.category) +
       "</div>" +
       '<h2 class="modal-title" id="modal-title">' +
-      tool.name +
+      esc(tool.name) +
       "</h2>" +
       '<p class="modal-desc">' +
       withHighlight(tool.description, tool.highlight) +
