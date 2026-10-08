@@ -238,6 +238,7 @@ async function handleList(env) {
 // alheia (o cliente recarrega a lista e tenta de novo).
 async function handleMutate(env, payload) {
   const action = payload.action;
+  if (action === "batch") return handleBatch(env, payload);
   if (!["create", "update", "delete"].includes(action)) {
     return respond(400, { error: "Ação inválida." });
   }
@@ -286,6 +287,68 @@ async function handleMutate(env, payload) {
   tools.splice(idx, 1);
   const newContent = serializeTools(content, tools);
   const newSha = await githubPutFile(env.repo, env.branch, env.token, newContent, sha, `admin: remove ferramenta "${removed.name}"`);
+  return respond(200, { tools, sha: newSha });
+}
+
+// Várias alterações de uma vez (o admin acumula e envia tudo no "Salvar
+// tudo"): aplica em ordem, valida todas e só então faz UM commit. Se
+// qualquer item for inválido, nada é gravado.
+async function handleBatch(env, payload) {
+  const changes = Array.isArray(payload.changes) ? payload.changes : [];
+  if (changes.length === 0) return respond(400, { error: "Nenhuma alteração para salvar." });
+  if (changes.length > 200) return respond(400, { error: "Alterações demais num envio só." });
+  if (!payload.sha) return respond(400, { error: "Versão da lista ausente. Recarregue a página." });
+
+  const { content, sha } = await githubGetFile(env.repo, env.branch, env.token);
+  if (payload.sha !== sha) {
+    return respond(409, {
+      error: "A lista de ferramentas mudou desde que esta página foi carregada (outra pessoa salvou). Suas alterações continuam na tela: recarregue a lista e aplique de novo.",
+    });
+  }
+
+  const tools = parseTools(content);
+  const errors = [];
+  const resumo = { create: [], update: [], delete: [] };
+
+  changes.forEach((ch, i) => {
+    const prefixo = `Item ${i + 1}`;
+    if (ch.op === "create") {
+      const record = buildToolRecord(ch.tool || {}, null);
+      const errs = validateTool(record);
+      if (!record.id) errs.push("Não foi possível gerar um id a partir do nome.");
+      if (tools.some((t) => t.id === record.id)) errs.push(`Já existe uma ferramenta com o id "${record.id}".`);
+      if (errs.length) return errors.push(`${prefixo} (${record.name || "nova"}): ${errs.join(" ")}`);
+      tools.push(record);
+      resumo.create.push(record.name);
+    } else if (ch.op === "update") {
+      const idx = tools.findIndex((t) => t.id === ch.id);
+      if (idx === -1) return errors.push(`${prefixo}: ferramenta "${ch.id}" não encontrada.`);
+      const record = buildToolRecord(ch.tool || {}, tools[idx]);
+      const errs = validateTool(record);
+      if (errs.length) return errors.push(`${prefixo} (${record.name}): ${errs.join(" ")}`);
+      tools[idx] = record;
+      resumo.update.push(record.name);
+    } else if (ch.op === "delete") {
+      const idx = tools.findIndex((t) => t.id === ch.id);
+      if (idx === -1) return errors.push(`${prefixo}: ferramenta "${ch.id}" não encontrada.`);
+      resumo.delete.push(tools[idx].name);
+      tools.splice(idx, 1);
+    } else {
+      errors.push(`${prefixo}: operação inválida.`);
+    }
+  });
+
+  if (errors.length) return respond(400, { error: "Nada foi salvo. " + errors.join(" | ") });
+
+  const partes = [];
+  if (resumo.create.length) partes.push(`adiciona ${resumo.create.join(", ")}`);
+  if (resumo.update.length) partes.push(`atualiza ${resumo.update.join(", ")}`);
+  if (resumo.delete.length) partes.push(`remove ${resumo.delete.join(", ")}`);
+  let message = `admin: ${changes.length} alteração(ões) — ${partes.join("; ")}`;
+  if (message.length > 200) message = message.slice(0, 197) + "...";
+
+  const newContent = serializeTools(content, tools);
+  const newSha = await githubPutFile(env.repo, env.branch, env.token, newContent, sha, message);
   return respond(200, { tools, sha: newSha });
 }
 

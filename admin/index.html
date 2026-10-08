@@ -25,10 +25,22 @@
   <header class="admin-header">
     <div>
       <h1>Painel DP — Admin</h1>
-      <p class="muted">Mudanças aqui são commitadas no GitHub e publicadas no Netlify automaticamente (~1 min).</p>
+      <p class="muted">Faça quantas alterações quiser e clique em <strong>Salvar tudo</strong>: elas viram um único commit no GitHub e o Netlify publica em ~1 min.</p>
     </div>
     <a href="../index.html" class="btn-secondary" target="_blank" rel="noopener">Ver painel público</a>
   </header>
+
+  <div id="pending-bar" class="pending-bar" role="status" hidden>
+    <span id="pending-count" class="pending-count"></span>
+    <div class="pending-actions">
+      <button type="button" id="btn-discard-all" class="btn-secondary">Descartar</button>
+      <button type="button" id="btn-save-all" class="btn-primary">Salvar tudo</button>
+    </div>
+    <div id="pending-error-box" class="pending-error" hidden>
+      <span id="pending-error"></span>
+      <button type="button" id="btn-reload-keep" class="btn-secondary" hidden>Recarregar lista mantendo minhas alterações</button>
+    </div>
+  </div>
 
   <div class="admin-layout">
     <section class="tools-panel">
@@ -161,7 +173,7 @@
         <p id="form-success" class="success-msg" hidden></p>
 
         <div class="form-actions">
-          <button type="submit" class="btn-primary">Salvar</button>
+          <button type="submit" class="btn-primary">Aplicar alteração</button>
           <button type="button" id="btn-delete-tool" class="btn-danger" hidden>Excluir ferramenta</button>
         </div>
       </form>
