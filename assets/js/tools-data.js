@@ -46,7 +46,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "layout-dashboard",
     "highlight": "Painel completo de RH",
     "version": "v75",
-    "cardSize": "medium",
+    "cardSize": "compact",
     "order": 10,
     "status": "hosted",
     "hosted": {
