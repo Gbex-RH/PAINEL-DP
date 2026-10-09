@@ -80,13 +80,76 @@
       u.textContent = user.email || "";
       u.title = user.email || "";
     }
-    if (logged && user.email === PAINEL_ADMIN_EMAIL) {
-      closeLogin(true);
-      showPanel();
-    } else {
+    var email = logged ? String(user.email || "").toLowerCase() : "";
+    var isAdmin = email === PAINEL_ADMIN_EMAIL;
+    $("admin-manage").hidden = !isAdmin; // /admin (cards) é só do administrador
+    if (logged) closeLogin(true);
+    if (!logged) {
       hidePanel();
-      if (logged) closeLogin(true);
+      return;
     }
+    if (isAdmin) {
+      showPanel();
+      showAccessManager(true);
+      return;
+    }
+    // demais usuários: precisam estar na lista "acessos" (gerida pelo admin no painel)
+    showAccessManager(false);
+    db.collection("acessos").doc(email).get().then(function (d) {
+      if (auth.currentUser && d.exists && d.data().emails === true) showPanel();
+      else hidePanel();
+    }, function () { hidePanel(); });
+  }
+
+  /* ---------- quem pode ver os e-mails (só o admin gerencia) ---------- */
+  var accessUnsub = null;
+  function showAccessManager(on) {
+    var box = $("emails-access");
+    if (!box) return;
+    box.hidden = !on;
+    if (accessUnsub) { accessUnsub(); accessUnsub = null; }
+    if (!on) return;
+    accessUnsub = db.collection("acessos").onSnapshot(function (snap) {
+      var ul = $("emails-access-list");
+      ul.textContent = "";
+      var docs = snap.docs.filter(function (d) { return d.data().emails === true; });
+      if (!docs.length) ul.appendChild(el("li", "emails-access-empty", "Só você tem acesso."));
+      docs.forEach(function (d) {
+        var li = el("li", null);
+        li.appendChild(el("span", null, d.id));
+        var rm = el("button", "emails-access-remove", "Remover");
+        rm.type = "button";
+        rm.setAttribute("aria-label", "Remover acesso de " + d.id);
+        rm.addEventListener("click", function () {
+          if (confirm("Remover o acesso de " + d.id + " aos e-mails?")) db.collection("acessos").doc(d.id).delete();
+        });
+        li.appendChild(rm);
+        ul.appendChild(li);
+      });
+    }, function () {
+      $("emails-access-msg").textContent = "Sem permissão para ver a lista. Confirme se as regras do Firestore foram atualizadas.";
+    });
+  }
+
+  function addAccess(e) {
+    e.preventDefault();
+    var input = $("emails-access-input");
+    var msg = $("emails-access-msg");
+    var email = input.value.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.textContent = "Digite um e-mail válido.";
+      return;
+    }
+    db.collection("acessos").doc(email).set({
+      emails: true,
+      incluidoPor: auth.currentUser.email,
+      incluidoEm: firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(function () {
+      input.value = "";
+      msg.textContent = email + " agora pode ver os e-mails (precisa ter usuário no Firebase).";
+    }, function () {
+      msg.textContent = "Não foi possível salvar. Confirme se as regras do Firestore foram atualizadas.";
+    });
   }
 
   /* ---------- modal de login ---------- */
@@ -240,6 +303,33 @@
     aside.appendChild(search);
     aside.appendChild(status);
     aside.appendChild(list);
+
+    // gestão de acesso (visível só para o admin)
+    var acc = el("details", "emails-access");
+    acc.id = "emails-access";
+    acc.hidden = true;
+    acc.appendChild(el("summary", null, "Quem pode ver estes e-mails"));
+    var accForm = el("form", "emails-access-form");
+    var accInput = el("input", "emails-search");
+    accInput.id = "emails-access-input";
+    accInput.type = "email";
+    accInput.placeholder = "e-mail do usuário";
+    accInput.setAttribute("aria-label", "E-mail para liberar acesso");
+    var accBtn = el("button", "chip", "Liberar");
+    accBtn.type = "submit";
+    accForm.appendChild(accInput);
+    accForm.appendChild(accBtn);
+    accForm.addEventListener("submit", addAccess);
+    acc.appendChild(accForm);
+    var accMsg = el("p", "emails-status");
+    accMsg.id = "emails-access-msg";
+    accMsg.setAttribute("aria-live", "polite");
+    acc.appendChild(accMsg);
+    var accList = el("ul", "emails-access-list");
+    accList.id = "emails-access-list";
+    acc.appendChild(accList);
+    aside.appendChild(acc);
+
     document.body.appendChild(aside);
 
     var toggle = el("button", "emails-toggle", "E-mails");

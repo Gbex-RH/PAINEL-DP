@@ -1676,3 +1676,25 @@ button.admin-link {
   border-top: 4px solid var(--brand);
   color: #fff;
 }
+
+/* ---------- painel de e-mails: quem pode ver ---------- */
+.emails-access {
+  margin-top: var(--sp-4, 16px);
+  padding-top: var(--sp-3, 12px);
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.emails-access[hidden] { display: none; }
+.emails-access summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.emails-access-form { display: flex; gap: 8px; margin: 10px 0 6px; }
+.emails-access-form input { flex: 1; min-width: 0; }
+.emails-access-list { list-style: none; margin: 6px 0 0; padding: 0; }
+.emails-access-list li {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  padding: 6px 0; border-bottom: 1px solid var(--border); color: var(--text); word-break: break-all;
+}
+.emails-access-remove {
+  background: transparent; border: 0; padding: 2px 4px; cursor: pointer;
+  color: var(--text-muted, inherit); font: inherit; text-decoration: underline;
+}
+.emails-access-empty { color: var(--text-muted, inherit); }
