@@ -70,23 +70,23 @@
 /* Clara: fundo claro, texto escuro; azul de marca escurecido para texto */
 [data-theme="clara"] {
   color-scheme: light;
-  --bg: #f2f6fb;
-  --bg-image: radial-gradient(900px circle at 90% -10%, rgba(54, 169, 225, 0.16), transparent 60%),
-    radial-gradient(700px circle at 0% 30%, rgba(49, 64, 132, 0.07), transparent 60%);
+  --bg: #e6e9f0; /* Light Grey oficial (#EDEDED, pág. 5) levemente tingido de Asphalt */
+  --bg-image: radial-gradient(900px circle at 90% -10%, rgba(54, 169, 225, 0.14), transparent 60%),
+    radial-gradient(700px circle at 0% 30%, rgba(49, 64, 132, 0.06), transparent 60%);
   --surface: #ffffff;
   --surface-hover: #ffffff;
   --surface-solid: #ffffff;
-  --border: rgba(15, 23, 42, 0.12);
-  --border-strong: rgba(15, 23, 42, 0.32);
-  --text: #0f172a;
-  --text-muted: #3d4a5e;
-  --text-soft: #566275;
+  --border: rgba(49, 64, 132, 0.22);
+  --border-strong: rgba(49, 64, 132, 0.45);
+  --text: #1f2540;
+  --text-muted: #3c3c3b; /* Black 7C oficial */
+  --text-soft: #525563;
   --hover-fill: rgba(15, 23, 42, 0.07);
   --accent: #1b6c9b;
   --brand-hover: #5cbbe8;
-  --ink: #f2f6fb;
+  --ink: #e6e9f0;
   --focus: #314084;
-  --toolbar-bg: rgba(242, 246, 251, 0.86);
+  --toolbar-bg: rgba(230, 233, 240, 0.9);
   --overlay-bg: rgba(15, 23, 42, 0.45);
   --icon-bg: rgba(54, 169, 225, 0.16);
   --glow: rgba(54, 169, 225, 0.14);
@@ -97,8 +97,8 @@
   --ok: #15803d;
   --err: #b91c1c;
   --starfield: 0;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
-  --shadow-md: 0 14px 32px rgba(15, 23, 42, 0.14);
+  --shadow-sm: 0 1px 2px rgba(49, 64, 132, 0.12), 0 4px 10px rgba(49, 64, 132, 0.08);
+  --shadow-md: 0 2px 4px rgba(49, 64, 132, 0.1), 0 18px 36px rgba(49, 64, 132, 0.22);
   --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.3);
 }
 
@@ -1375,4 +1375,68 @@ svg {
     transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---------- tema Clara: aplicação do brandbook ----------
+   Cards brancos sobre fundo cinza-azulado, borda definida, sombra em camadas,
+   faixa de acento Asphalt/Blue no topo e ícone em azul de marca. Texto usa
+   Asphalt (#314084) ou azul escuro, nunca o Gbex Blue puro (reprova AA). */
+[data-theme="clara"] .card {
+  background: #fff;
+  border: 1px solid rgba(49, 64, 132, 0.22);
+  border-top: 4px solid var(--brand-deep);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: none;
+}
+[data-theme="clara"] .card:hover {
+  border-color: var(--brand-deep);
+  border-top-color: var(--brand);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-6px);
+}
+[data-theme="clara"] .card-icon {
+  background: var(--brand-deep);
+  color: #fff;
+}
+[data-theme="clara"] .card-title {
+  color: var(--brand-deep);
+}
+[data-theme="clara"] .chip {
+  background: #fff;
+  border-color: rgba(49, 64, 132, 0.35);
+  color: var(--brand-deep);
+}
+[data-theme="clara"] .chip:hover {
+  border-color: var(--brand-deep);
+  background: rgba(54, 169, 225, 0.12);
+}
+[data-theme="clara"] .chip.active {
+  background: var(--brand-deep);
+  border-color: var(--brand-deep);
+  color: #fff;
+}
+[data-theme="clara"] .search-box input {
+  background: #fff;
+  border: 1px solid rgba(49, 64, 132, 0.35);
+  border-radius: var(--radius-sm);
+}
+[data-theme="clara"] .search-box input:focus {
+  border-color: var(--brand-deep);
+}
+[data-theme="clara"] .site-header {
+  border-bottom: 4px solid var(--brand);
+  background: #fff;
+}
+[data-theme="clara"] .page-title {
+  color: var(--brand-deep);
+}
+[data-theme="clara"] .modal {
+  background: #fff;
+  border: 1px solid rgba(49, 64, 132, 0.3);
+  border-top: 4px solid var(--brand);
+}
+[data-theme="clara"] .site-footer {
+  background: var(--brand-deep);
+  border-top: 4px solid var(--brand);
+  color: #fff;
 }
