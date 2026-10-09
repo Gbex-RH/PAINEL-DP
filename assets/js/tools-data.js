@@ -69,7 +69,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "clock",
     "highlight": "4 abas",
     "version": "v70",
-    "cardSize": "small",
+    "cardSize": "compact",
     "order": 20,
     "status": "hosted",
     "hosted": {
@@ -94,7 +94,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "shield-check",
     "highlight": "100% no navegador",
     "version": null,
-    "cardSize": "small",
+    "cardSize": "compact",
     "order": 30,
     "status": "hosted",
     "hosted": {
@@ -118,7 +118,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "file-spreadsheet",
     "highlight": "conferindo a aritmética",
     "version": null,
-    "cardSize": "small",
+    "cardSize": "compact",
     "order": 40,
     "status": "local",
     "hosted": null,
