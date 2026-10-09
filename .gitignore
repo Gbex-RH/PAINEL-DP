@@ -10,3 +10,9 @@ EMAILS/
 EMAIL THUNDERBIRD.md
 exportar_emails.py
 .claude/
+
+# robô de e-mails: credenciais e estado locais
+robo-emails/
+
+# material interno de referência (repositório é público)
+*.pdf

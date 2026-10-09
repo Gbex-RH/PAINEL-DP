@@ -1363,6 +1363,242 @@ svg {
   text-decoration: underline;
 }
 
+/* ---------- login do admin ---------- */
+.admin-area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.admin-area [hidden] {
+  display: none;
+}
+button.admin-link {
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.admin-user {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.login-modal {
+  max-width: 400px;
+}
+.login-modal .modal-title {
+  margin: 0;
+  font-size: 20px;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-5) var(--sp-5);
+}
+.login-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.login-form input {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.login-form .btn {
+  align-self: flex-start;
+  margin-top: var(--sp-2);
+}
+.login-form .btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.login-error {
+  min-height: 1.2em;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--err);
+}
+
+/* ---------- painel lateral de e-mails ---------- */
+.emails-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  overflow-y: auto;
+  background: var(--surface-solid);
+  border-left: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  color: var(--text);
+}
+.emails-panel[hidden],
+.emails-toggle[hidden] {
+  display: none;
+}
+.emails-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.emails-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.emails-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.emails-tabs .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.emails-count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--hover-fill, var(--icon-bg));
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+.emails-search {
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+.emails-status {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+.emails-status.is-error {
+  font-weight: 600;
+  color: var(--err);
+}
+.emails-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.email-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow: hidden;
+}
+.email-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.email-head:hover {
+  background: var(--hover-fill, var(--surface-hover));
+}
+.email-date {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+.email-subject {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.email-from {
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+.email-body {
+  padding: 4px 12px 12px;
+  border-top: 1px solid var(--border);
+}
+.email-body[hidden] {
+  display: none;
+}
+.email-snippet {
+  margin-top: var(--sp-2);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.email-meta {
+  margin: var(--sp-2) 0 0;
+  font-size: 12px;
+  color: var(--text-soft);
+  overflow-wrap: anywhere;
+}
+.email-attach {
+  margin: 2px 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+.emails-toggle {
+  position: fixed;
+  right: var(--sp-4);
+  bottom: var(--sp-4);
+  z-index: 60;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--brand-on);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+}
+.emails-toggle:hover {
+  background: var(--brand-hover);
+}
+[data-theme="contraste"] .emails-panel {
+  border-left-width: 2px;
+}
+@media (min-width: 900px) {
+  .emails-panel {
+    width: 360px;
+  }
+  body.emails-open {
+    padding-right: 360px;
+  }
+}
+
 /* ---------- movimento reduzido (vale para tudo) ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
