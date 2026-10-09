@@ -203,8 +203,8 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "layout-dashboard",
     "highlight": null,
     "version": null,
-    "cardSize": "compact",
-    "order": 60,
+    "cardSize": "small",
+    "order": 2,
     "status": "hosted",
     "hosted": {
       "url": "https://integra.gbex.app.br/index.php",
