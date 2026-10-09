@@ -2,6 +2,12 @@
   publish = "."
   functions = "netlify/functions"
 
+# A apiKey da configuração web do Firebase é pública por definição (vai para o
+# navegador de qualquer site Firebase); a proteção dos dados está nas regras do
+# Firestore. Libera só esse valor no verificador de segredos do Netlify.
+[build.environment]
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyBCS4hCaaYkPOQpS3eO5qrErYU09nLR68s"
+
 [[headers]]
   for = "/admin/*"
   [headers.values]
