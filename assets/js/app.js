@@ -9,6 +9,10 @@
   };
 
   var lastFocusedEl = null;
+  var hasRendered = false; // a animação de entrada dos cards só roda na 1ª renderização
+  var THEMES = ["constelacao", "clara", "asfalto", "contraste"];
+  var THEME_KEY = "painelDpTheme";
+  var searchTimer = null;
 
   function normalize(str) {
     return (str || "")
@@ -126,10 +130,10 @@
     });
   }
 
-  function createCardElement(tool, index) {
+  function createCardElement(tool, index, animate) {
     var card = document.createElement("article");
     var cardSize = ["tiny", "compact", "small", "medium", "large"].indexOf(tool.cardSize) !== -1 ? tool.cardSize : "medium";
-    card.className = "card card--" + cardSize;
+    card.className = "card card--" + cardSize + (animate ? " card--reveal" : "");
     card.style.setProperty("--i", index);
 
     var actionsHtml;
@@ -137,11 +141,21 @@
       actionsHtml =
         '<a class="card-open" href="' +
         safeUrl(tool.hosted.url) +
-        '" target="_blank" rel="noopener">Abrir' +
+        '" target="_blank" rel="noopener" aria-label="Abrir ' +
+        esc(tool.name) +
+        ' (nova aba)">Abrir' +
         iconSvg("external-link") +
-        "</a>";
+        "</a>" +
+        '<button type="button" class="card-details" data-action="details" aria-label="Ver detalhes de ' +
+        esc(tool.name) +
+        '">Detalhes</button>';
     } else {
-      actionsHtml = '<button type="button" class="card-open" data-action="details">Abrir' + iconSvg("external-link") + "</button>";
+      actionsHtml =
+        '<button type="button" class="card-open" data-action="details" aria-label="Abrir ' +
+        esc(tool.name) +
+        ' (ver passo a passo)">Abrir' +
+        iconSvg("external-link") +
+        "</button>";
     }
 
     var metaBits = [];
@@ -167,16 +181,23 @@
       actionsHtml +
       "</div>";
 
-    var openEl = card.querySelector(".card-open");
-    if (openEl) {
-      openEl.addEventListener("click", function (e) {
+    // botões de detalhes (acessíveis por teclado) e link "Abrir" não repassam o clique ao card
+    card.querySelectorAll('[data-action="details"]').forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
         e.stopPropagation();
-        if (tool.status === "local") openModal(tool, openEl);
+        openModal(tool, btn);
+      });
+    });
+    var openLink = card.querySelector("a.card-open");
+    if (openLink) {
+      openLink.addEventListener("click", function (e) {
+        e.stopPropagation();
       });
     }
 
+    // clicar no resto do card (mouse/toque) também abre os detalhes
     card.addEventListener("click", function () {
-      openModal(tool, card);
+      openModal(tool, card.querySelector('[data-action="details"]'));
     });
 
     attachTilt(card);
@@ -184,12 +205,18 @@
     return card;
   }
 
+  // marca/desmarca um botão de filtro (visual + leitor de tela)
+  function setPressed(btn, on) {
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+
   function renderChips() {
     var container = document.getElementById("category-chips");
     var categories = getCategories();
-    var html = '<button type="button" class="chip active" data-category="all">Todas</button>';
+    var html = '<button type="button" class="chip active" data-category="all" aria-pressed="true">Todas</button>';
     categories.forEach(function (c) {
-      html += '<button type="button" class="chip" data-category="' + esc(c) + '">' + esc(c) + "</button>";
+      html += '<button type="button" class="chip" aria-pressed="false" data-category="' + esc(c) + '">' + esc(c) + "</button>";
     });
     container.innerHTML = html;
 
@@ -197,7 +224,7 @@
       chip.addEventListener("click", function () {
         state.category = chip.getAttribute("data-category");
         container.querySelectorAll(".chip").forEach(function (c) {
-          c.classList.toggle("active", c === chip);
+          setPressed(c, c === chip);
         });
         renderGrid();
       });
@@ -209,14 +236,25 @@
     var emptyState = document.getElementById("empty-state");
     var list = getFilteredSortedTools();
 
+    var animate = !hasRendered;
+    hasRendered = true;
+
     grid.innerHTML = "";
     if (list.length === 0) {
       emptyState.classList.add("visible");
     } else {
       emptyState.classList.remove("visible");
       list.forEach(function (tool, index) {
-        grid.appendChild(createCardElement(tool, index));
+        grid.appendChild(createCardElement(tool, index, animate));
       });
+    }
+
+    var status = document.getElementById("results-status");
+    if (status) {
+      status.textContent =
+        list.length === 0
+          ? "Nenhuma ferramenta encontrada."
+          : list.length + (list.length === 1 ? " ferramenta encontrada." : " ferramentas encontradas.");
     }
   }
 
@@ -314,6 +352,14 @@
     );
   }
 
+  // enquanto o modal está aberto, o resto da página fica "inerte" (sem foco/leitura)
+  function setPageInert(on) {
+    document.querySelectorAll(".site-header, .toolbar, main, .site-footer").forEach(function (el) {
+      if (on) el.setAttribute("inert", "");
+      else el.removeAttribute("inert");
+    });
+  }
+
   function openModal(tool, triggerEl) {
     lastFocusedEl = triggerEl || document.activeElement;
 
@@ -334,6 +380,7 @@
     if (closeLink) closeLink.addEventListener("click", closeModal);
 
     overlay.classList.add("visible");
+    setPageInert(true);
     document.body.style.overflow = "hidden";
     document.getElementById("modal-close").focus();
   }
@@ -342,6 +389,7 @@
     var overlay = document.getElementById("modal-overlay");
     if (!overlay.classList.contains("visible")) return;
     overlay.classList.remove("visible");
+    setPageInert(false);
     document.body.style.overflow = "";
     if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
       lastFocusedEl.focus();
@@ -356,32 +404,40 @@
     document.body.appendChild(textarea);
     textarea.focus();
     textarea.select();
+    var ok = false;
     try {
-      document.execCommand("copy");
+      ok = document.execCommand("copy");
     } catch (err) {
-      /* sem suporte: o texto já fica selecionado para copiar manualmente (Ctrl+C) */
+      ok = false;
     }
     document.body.removeChild(textarea);
+    return ok;
   }
 
   function copyToClipboard(text, buttonEl) {
-    function showCopied() {
-      buttonEl.classList.add("copied");
-      buttonEl.innerHTML = iconSvg("check");
+    function flash(ok) {
+      buttonEl.classList.add(ok ? "copied" : "failed");
+      buttonEl.innerHTML = iconSvg(ok ? "check" : "x");
+      buttonEl.setAttribute("title", ok ? "Copiado" : "Não foi possível copiar — selecione o texto e use Ctrl+C");
       setTimeout(function () {
-        buttonEl.classList.remove("copied");
+        buttonEl.classList.remove("copied", "failed");
         buttonEl.innerHTML = iconSvg("copy");
-      }, 1500);
+        buttonEl.removeAttribute("title");
+      }, 1800);
+    }
+
+    function viaFallback() {
+      var ok = fallbackCopy(text);
+      buttonEl.focus();
+      flash(ok);
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(showCopied, function () {
-        fallbackCopy(text);
-        showCopied();
-      });
+      navigator.clipboard.writeText(text).then(function () {
+        flash(true);
+      }, viaFallback);
     } else {
-      fallbackCopy(text);
-      showCopied();
+      viaFallback();
     }
   }
 
@@ -422,16 +478,17 @@
   }
 
   function clearFilters() {
+    window.clearTimeout(searchTimer);
     state.search = "";
     state.category = "all";
     state.status = "all";
 
     document.getElementById("search-input").value = "";
     document.querySelectorAll("#category-chips .chip").forEach(function (c) {
-      c.classList.toggle("active", c.getAttribute("data-category") === "all");
+      setPressed(c, c.getAttribute("data-category") === "all");
     });
     document.querySelectorAll("#status-toggle button").forEach(function (b) {
-      b.classList.toggle("active", b.getAttribute("data-status") === "all");
+      setPressed(b, b.getAttribute("data-status") === "all");
     });
     updateStatusIndicator();
 
@@ -449,6 +506,39 @@
     });
   }
 
+  /* ---------- temas ---------- */
+
+  function currentTheme() {
+    var t = document.documentElement.getAttribute("data-theme");
+    return THEMES.indexOf(t) !== -1 ? t : "constelacao";
+  }
+
+  function applyTheme(theme, persist) {
+    if (THEMES.indexOf(theme) === -1) theme = "constelacao";
+    document.documentElement.setAttribute("data-theme", theme);
+    document.querySelectorAll("[data-theme-choice]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-theme-choice") === theme ? "true" : "false");
+    });
+    if (persist) {
+      try {
+        localStorage.setItem(THEME_KEY, theme);
+      } catch (e) {
+        /* armazenamento indisponível: o tema vale só nesta visita */
+      }
+    }
+    // avisa o campo de estrelas (liga/desliga e muda a cor conforme o tema)
+    window.dispatchEvent(new Event("painel-theme-change"));
+  }
+
+  function initThemePicker() {
+    applyTheme(currentTheme(), false);
+    document.querySelectorAll("[data-theme-choice]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        applyTheme(btn.getAttribute("data-theme-choice"), true);
+      });
+    });
+  }
+
   function init() {
     updateToolCount();
     renderChips();
@@ -457,10 +547,17 @@
     initBackgroundSpotlight();
 
     window.addEventListener("resize", updateStatusIndicator);
+    // a fonte Inter pode chegar depois: remede o indicador quando ela carregar
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateStatusIndicator);
+    initThemePicker();
 
     document.getElementById("search-input").addEventListener("input", function (e) {
-      state.search = e.target.value;
-      renderGrid();
+      var value = e.target.value;
+      window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(function () {
+        state.search = value;
+        renderGrid();
+      }, 150);
     });
 
     document.getElementById("status-toggle").addEventListener("click", function (e) {
@@ -468,7 +565,7 @@
       if (!btn) return;
       state.status = btn.getAttribute("data-status");
       this.querySelectorAll("button").forEach(function (b) {
-        b.classList.toggle("active", b === btn);
+        setPressed(b, b === btn);
       });
       updateStatusIndicator();
       renderGrid();

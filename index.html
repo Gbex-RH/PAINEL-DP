@@ -1,8 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="constelacao">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+/* aplica o tema salvo antes da primeira pintura (evita "flash" de cor) */
+(function () {
+  try {
+    var t = localStorage.getItem("painelDpTheme");
+    if (t === "constelacao" || t === "clara" || t === "asfalto" || t === "contraste") {
+      document.documentElement.setAttribute("data-theme", t);
+    }
+  } catch (e) {}
+})();
+</script>
 <title>Painel DP — GBEX / GBLOG</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -86,7 +97,7 @@
 </svg>
 
 <div id="intro-overlay">
-  <div class="intro-stage">
+  <div class="intro-stage" aria-hidden="true">
     <svg class="intro-guide" viewBox="0 0 240 240" aria-hidden="true">
       <circle class="intro-guide-ring" cx="120" cy="120" r="100" />
       <circle class="intro-guide-dot" cx="120" cy="20" r="4" />
@@ -96,7 +107,7 @@
     </svg>
     <div class="intro-logo-stage" id="intro-logo-stage"></div>
   </div>
-  <p class="intro-caption">Painel DP</p>
+  <p class="intro-caption" aria-hidden="true">Painel DP</p>
   <button type="button" class="intro-skip" id="intro-skip">Pular</button>
 </div>
 
@@ -105,10 +116,19 @@
     <div class="header-top">
       <div class="brand-mark" id="nav-logo-mover">
         <span class="brand-logo-tilt" id="nav-logo-tilt">
-          <img src="LOGO_GBEX_3-removebg-preview.png" alt="Gbex" class="brand-logo-img" />
+          <img src="LOGO_GBEX_3-removebg-preview.png" alt="Gbex" class="brand-logo-img" width="257" height="102" />
         </span>
       </div>
-      <span class="tool-count" id="tool-count"></span>
+      <div class="header-tools">
+        <span class="tool-count" id="tool-count"></span>
+        <div class="theme-picker" id="theme-picker" role="group" aria-label="Tema de cores">
+          <button type="button" class="theme-swatch" data-theme-choice="constelacao" aria-pressed="true" aria-label="Tema Constelação (escuro com estrelas)" title="Constelação"></button>
+          <button type="button" class="theme-swatch" data-theme-choice="clara" aria-pressed="false" aria-label="Tema Clara" title="Clara"></button>
+          <button type="button" class="theme-swatch" data-theme-choice="asfalto" aria-pressed="false" aria-label="Tema Asfalto (azul institucional, sem animação)" title="Asfalto"></button>
+          <button type="button" class="theme-swatch" data-theme-choice="contraste" aria-pressed="false" aria-label="Tema Alto contraste" title="Alto contraste"></button>
+        </div>
+        <a class="admin-link" href="admin/" title="Área administrativa">Admin</a>
+      </div>
     </div>
     <h1 class="page-title">Painel DP</h1>
     <p class="page-subtitle"><span class="rule" aria-hidden="true"></span>GBEX · GBLOG — Departamento Pessoal</p>
@@ -124,9 +144,9 @@
     <div class="chip-row" id="category-chips" role="group" aria-label="Filtrar por categoria"></div>
     <div class="status-toggle" id="status-toggle" role="group" aria-label="Filtrar por forma de acesso">
       <span class="status-indicator" id="status-indicator" aria-hidden="true"></span>
-      <button type="button" class="active" data-status="all">Todas</button>
-      <button type="button" data-status="hosted">Acesso direto</button>
-      <button type="button" data-status="local">Uso local</button>
+      <button type="button" class="active" data-status="all" aria-pressed="true">Todas</button>
+      <button type="button" data-status="hosted" aria-pressed="false">Acesso direto</button>
+      <button type="button" data-status="local" aria-pressed="false">Uso local</button>
     </div>
     <select class="sort-select" id="sort-select" aria-label="Ordenar por">
       <option value="order">Padrão</option>
@@ -136,6 +156,7 @@
   </div>
 </div>
 
+<p class="sr-only" id="results-status" role="status" aria-live="polite"></p>
 <main>
   <section class="grid-section container">
     <div class="grid" id="grid"></div>
@@ -155,7 +176,7 @@
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-top">
-      <div class="card-icon" id="modal-icon" aria-hidden="true"><svg><use href=""></use></svg></div>
+      <div class="card-icon" id="modal-icon" aria-hidden="true"></div>
       <button type="button" class="modal-close" id="modal-close" aria-label="Fechar">
         <svg aria-hidden="true"><use href="#icon-x"></use></svg>
       </button>

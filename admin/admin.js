@@ -244,6 +244,12 @@
     el.hidden = false;
   }
 
+  // Mostra ao lado do campo "Ícone" o desenho do ícone escolhido.
+  function updateIconPreview() {
+    const use = $("icon-preview-use");
+    if (use) use.setAttribute("href", "#icon-" + $("f-icon").value);
+  }
+
   function toggleStatusFields() {
     const status = $("f-status").value;
     $("fieldset-hosted").hidden = status !== "hosted";
@@ -257,6 +263,7 @@
     $("f-id").value = "(gerado a partir do nome)";
     $("f-status").value = "hosted";
     $("f-icon").value = "layout-dashboard";
+    updateIconPreview();
     $("f-card-size").value = "medium";
     const maxOrder = state.draft.reduce((max, t) => Math.max(max, Number(t.order) || 0), 0);
     $("f-order").value = maxOrder + 10;
@@ -277,6 +284,7 @@
     $("f-id").value = tool.id;
     $("f-category").value = tool.category;
     $("f-icon").value = tool.icon;
+    updateIconPreview();
     $("f-description").value = tool.description;
     $("f-tags").value = (tool.tags || []).join(", ");
     $("f-highlight").value = tool.highlight || "";
@@ -411,6 +419,7 @@
       if (tool) deleteTool(tool);
     });
     $("f-status").addEventListener("change", toggleStatusFields);
+    $("f-icon").addEventListener("change", updateIconPreview);
     $("btn-save-all").addEventListener("click", saveAll);
     $("btn-discard-all").addEventListener("click", discardAll);
     $("btn-reload-keep").addEventListener("click", reloadKeepingChanges);

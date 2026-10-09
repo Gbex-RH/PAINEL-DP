@@ -10,6 +10,50 @@
 </head>
 <body>
 
+<!-- Sprite dos ícones (mesmos desenhos de /index.html) para a prévia do campo "Ícone". -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="icon-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      <path d="m9 12 2 2 4-4"/>
+    </symbol>
+    <symbol id="icon-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/>
+      <rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/>
+      <rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </symbol>
+    <symbol id="icon-file-spreadsheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      <path d="M8 13h2"/>
+      <path d="M14 13h2"/>
+      <path d="M8 17h2"/>
+      <path d="M14 17h2"/>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.3-4.3"/>
+    </symbol>
+    <symbol id="icon-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 17 10 11 4 5"/>
+      <line x1="12" x2="20" y1="19" y2="19"/>
+    </symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+      <path d="M2 12h20"/>
+    </symbol>
+    <symbol id="icon-folder-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div id="gate-screen" class="gate-screen">
   <form id="gate-form" class="gate-card">
     <h1>Painel DP — Admin</h1>
@@ -67,21 +111,28 @@
         <div class="field-row">
           <div class="field">
             <label for="f-category">Categoria</label>
-            <input type="text" id="f-category" list="category-options" required />
+            <p class="field-help" id="help-category">Agrupa os cards no filtro do painel. Escolha uma existente (clique no campo para ver a lista) ou digite uma nova.</p>
+            <input type="text" id="f-category" list="category-options" aria-describedby="help-category" placeholder="Clique para ver as categorias existentes" autocomplete="off" required />
             <datalist id="category-options"></datalist>
           </div>
           <div class="field">
             <label for="f-icon">Ícone</label>
-            <select id="f-icon">
-              <option value="layout-dashboard">layout-dashboard</option>
-              <option value="clock">clock</option>
-              <option value="shield-check">shield-check</option>
-              <option value="file-spreadsheet">file-spreadsheet</option>
-              <option value="search">search</option>
-              <option value="terminal">terminal</option>
-              <option value="globe">globe</option>
-              <option value="folder-open">folder-open</option>
-            </select>
+            <p class="field-help" id="help-icon">Desenho que aparece no card. A prévia mostra como fica.</p>
+            <div class="icon-picker">
+              <select id="f-icon" aria-describedby="help-icon">
+                <option value="layout-dashboard">Painel / dashboard</option>
+                <option value="clock">Relógio (ponto, horários)</option>
+                <option value="shield-check">Escudo com visto (segurança, conformidade)</option>
+                <option value="file-spreadsheet">Planilha (folha, relatórios)</option>
+                <option value="search">Lupa (busca, consulta)</option>
+                <option value="terminal">Terminal (linha de comando)</option>
+                <option value="globe">Globo (site, internet)</option>
+                <option value="folder-open">Pasta aberta (arquivos)</option>
+              </select>
+              <span class="icon-preview" aria-hidden="true">
+                <svg width="28" height="28"><use id="icon-preview-use" href="#icon-layout-dashboard"></use></svg>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -93,10 +144,12 @@
         <div class="field-row">
           <div class="field">
             <label for="f-tags">Tags de busca (separadas por vírgula)</label>
+            <p class="field-help">Palavras extras para achar o card na busca do painel.</p>
             <input type="text" id="f-tags" placeholder="ex: folha, auditoria, inss" />
           </div>
           <div class="field">
-            <label for="f-highlight">Trecho a destacar (opcional, deve existir na descrição)</label>
+            <label for="f-highlight">Trecho a destacar (opcional)</label>
+            <p class="field-help">Parte da descrição que aparece em destaque (cor diferente). Copie o trecho exatamente como está na descrição.</p>
             <input type="text" id="f-highlight" />
           </div>
         </div>
@@ -104,6 +157,7 @@
         <div class="field-row">
           <div class="field">
             <label for="f-version">Versão (opcional)</label>
+            <p class="field-help">Número da versão mostrado no card, se houver.</p>
             <input type="text" id="f-version" placeholder="ex: v75" />
           </div>
           <div class="field">
@@ -120,13 +174,15 @@
 
         <div class="field-row">
           <div class="field">
-            <label for="f-order">Ordem (menor aparece primeiro em "Padrão")</label>
+            <label for="f-order">Ordem</label>
+            <p class="field-help">Posição do card no painel: número menor aparece primeiro (ex.: 10, 20, 30).</p>
             <input type="number" id="f-order" step="1" />
           </div>
         </div>
 
         <div class="field">
           <label for="f-status">Forma de acesso</label>
+          <p class="field-help">"Acesso direto": a ferramenta tem um link na internet. "Uso local": roda só no computador da pessoa (arquivo ou programa).</p>
           <select id="f-status">
             <option value="hosted">Acesso direto (tem URL fixa)</option>
             <option value="local">Uso local (precisa iniciar na máquina)</option>

@@ -4,25 +4,53 @@
    brandbook (gbex-brandbook.pdf): Gbex Blue PANTONE 298C / RGB(54,169,225)
    e Asphalt PANTONE 3584C / RGB(49,64,132). O roxo usado no mockup de
    referência NÃO é cor de marca — foi substituído pelo azul oficial. */
-:root {
+/* Temas: cada [data-theme] redefine só as variáveis abaixo; o resto do CSS
+   usa apenas variáveis. Tema padrão = "constelacao" (o :root). O atributo é
+   definido no <html> por um script pequeno no <head> (sem "flash"). */
+:root,
+[data-theme="constelacao"] {
+  color-scheme: dark;
   --bg: #161826;
+  --bg-image: none;
   --surface: rgba(255, 255, 255, 0.045);
+  --surface-hover: rgba(255, 255, 255, 0.065);
   --surface-solid: #1e2036;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.18);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.22);
   --text: #f3f5fe;
-  --text-muted: rgba(243, 245, 254, 0.64);
-  --text-soft: rgba(243, 245, 254, 0.4);
+  --text-muted: rgba(243, 245, 254, 0.78);
+  --text-soft: rgba(243, 245, 254, 0.64);
+  --hover-fill: rgba(255, 255, 255, 0.07);
 
-  --brand: #36a9e1; /* Gbex Blue — oficial */
+  --brand: #36a9e1; /* Gbex Blue — oficial (preenchimentos) */
   --brand-deep: #314084; /* Gbex Asphalt — oficial */
   --brand-on: #0b1220; /* texto escuro sobre fundo azul de marca */
+  --accent: #36a9e1; /* cor de texto/ícone de destaque (contraste AA sobre o fundo) */
+  --brand-hover: #55b8e6;
 
   --ink: #161826;
-  --focus: var(--brand);
+  --focus: #6fc6f1;
+  --toolbar-bg: rgba(22, 24, 38, 0.72);
+  --overlay-bg: rgba(6, 7, 14, 0.65);
+  --icon-bg: rgba(54, 169, 225, 0.14);
+  --glow: rgba(54, 169, 225, 0.16);
+  --spot: rgba(54, 169, 225, 0.08);
+  --logo-filter: brightness(0) invert(1);
 
   --status-hosted: #6fc6f1;
   --status-local: #f2b84b;
+  --ok: #4ade80;
+  --err: #f87171;
+  --code-bg: #0d0e1a;
+  --code-text: #cfe6f7;
+
+  --starfield: 1; /* 1 = desenha o campo de estrelas */
+  --star-rgb: 146, 197, 253;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --focus-width: 2px;
 
   --radius-lg: 20px;
   --radius-md: 12px;
@@ -36,11 +64,105 @@
   --sp-6: 32px;
   --sp-7: 48px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
-
   --ease-out: cubic-bezier(0.16, 0.8, 0.3, 1);
+}
+
+/* Clara: fundo claro, texto escuro; azul de marca escurecido para texto */
+[data-theme="clara"] {
+  color-scheme: light;
+  --bg: #f2f6fb;
+  --bg-image: radial-gradient(900px circle at 90% -10%, rgba(54, 169, 225, 0.16), transparent 60%),
+    radial-gradient(700px circle at 0% 30%, rgba(49, 64, 132, 0.07), transparent 60%);
+  --surface: #ffffff;
+  --surface-hover: #ffffff;
+  --surface-solid: #ffffff;
+  --border: rgba(15, 23, 42, 0.12);
+  --border-strong: rgba(15, 23, 42, 0.32);
+  --text: #0f172a;
+  --text-muted: #3d4a5e;
+  --text-soft: #566275;
+  --hover-fill: rgba(15, 23, 42, 0.07);
+  --accent: #1b6c9b;
+  --brand-hover: #5cbbe8;
+  --ink: #f2f6fb;
+  --focus: #314084;
+  --toolbar-bg: rgba(242, 246, 251, 0.86);
+  --overlay-bg: rgba(15, 23, 42, 0.45);
+  --icon-bg: rgba(54, 169, 225, 0.16);
+  --glow: rgba(54, 169, 225, 0.14);
+  --spot: rgba(54, 169, 225, 0.1);
+  --logo-filter: none;
+  --status-hosted: #17608a;
+  --status-local: #8a4f00;
+  --ok: #15803d;
+  --err: #b91c1c;
+  --starfield: 0;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 14px 32px rgba(15, 23, 42, 0.14);
+  --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.3);
+}
+
+/* Asfalto: base no Asphalt oficial (#314084), calmo, sem animação de fundo */
+[data-theme="asfalto"] {
+  color-scheme: dark;
+  --bg: #26336f;
+  --bg-image: linear-gradient(180deg, #2c3a7d 0%, #222d63 100%);
+  --surface: rgba(255, 255, 255, 0.07);
+  --surface-hover: rgba(255, 255, 255, 0.11);
+  --surface-solid: #2f3d82;
+  --border: rgba(255, 255, 255, 0.16);
+  --border-strong: rgba(255, 255, 255, 0.32);
+  --text: #f6f8ff;
+  --text-muted: rgba(246, 248, 255, 0.86);
+  --text-soft: rgba(246, 248, 255, 0.76);
+  --accent: #86cff3;
+  --focus: #ffffff;
+  --ink: #26336f;
+  --toolbar-bg: rgba(38, 51, 111, 0.88);
+  --overlay-bg: rgba(10, 14, 40, 0.62);
+  --icon-bg: rgba(134, 207, 243, 0.18);
+  --glow: rgba(134, 207, 243, 0.14);
+  --spot: rgba(134, 207, 243, 0.08);
+  --status-hosted: #8fd6f8;
+  --status-local: #ffd27a;
+  --code-bg: #171f4a;
+  --starfield: 0;
+}
+
+/* Alto contraste: preto/branco/amarelo, bordas fortes, sem efeitos */
+[data-theme="contraste"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-image: none;
+  --surface: #000000;
+  --surface-hover: #111111;
+  --surface-solid: #000000;
+  --border: rgba(255, 255, 255, 0.75);
+  --border-strong: #ffffff;
+  --text: #ffffff;
+  --text-muted: #f0f0f0;
+  --text-soft: #dcdcdc;
+  --hover-fill: rgba(255, 255, 255, 0.18);
+  --brand: #ffd60a;
+  --brand-on: #000000;
+  --accent: #ffd60a;
+  --brand-hover: #ffe55c;
+  --ink: #000000;
+  --focus: #ffffff;
+  --focus-width: 3px;
+  --toolbar-bg: #000000;
+  --overlay-bg: rgba(0, 0, 0, 0.85);
+  --icon-bg: #1a1a1a;
+  --glow: transparent;
+  --spot: transparent;
+  --status-hosted: #5ccfff;
+  --status-local: #ffb454;
+  --code-bg: #000000;
+  --code-text: #ffffff;
+  --starfield: 0;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 }
 
 /* ---------- reset ---------- */
@@ -53,7 +175,9 @@ body {
   padding: 0;
 }
 body {
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: var(--bg-image);
+  background-attachment: fixed;
   color: var(--text);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
@@ -91,7 +215,7 @@ svg {
   display: block;
 }
 :focus-visible {
-  outline: 2px solid var(--focus);
+  outline: var(--focus-width) solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -123,10 +247,13 @@ svg {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(560px circle at var(--bx, 50%) var(--by, 50%), rgba(54, 169, 225, 0.08), transparent 70%);
+  background: radial-gradient(560px circle at var(--bx, 50%) var(--by, 50%), var(--spot), transparent 70%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
+}
+[data-theme="contraste"] #bg-spotlight {
+  display: none;
 }
 #bg-spotlight.active {
   opacity: 1;
@@ -163,7 +290,7 @@ svg {
   /* a marca é azul (oficial); sobre fundo escuro usamos a variante
      "Negativa" prevista no próprio manual de identidade, aqui obtida via
      filtro (não temos o arquivo separado da negativa) */
-  filter: brightness(0) invert(1);
+  filter: var(--logo-filter);
 }
 .tool-count {
   font-size: 11px;
@@ -214,7 +341,7 @@ svg {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(22, 24, 38, 0.72);
+  background: var(--toolbar-bg);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
 }
@@ -270,7 +397,7 @@ svg {
   transform: scaleX(1);
 }
 .search-box:focus-within svg {
-  color: var(--brand);
+  color: var(--accent);
 }
 
 .chip-row {
@@ -410,9 +537,10 @@ svg {
   backdrop-filter: blur(20px);
   cursor: pointer;
   transition: transform 0.15s ease-out, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.card.card--reveal {
   animation: cardReveal 0.5s var(--ease-out) both;
   animation-delay: calc(var(--i, 0) * 70ms);
-  will-change: transform;
 }
 .card--tiny {
   min-height: 130px;
@@ -507,7 +635,7 @@ svg {
   inset: 0;
   z-index: 0;
   border-radius: inherit;
-  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(54, 169, 225, 0.16), transparent 70%);
+  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), var(--glow), transparent 70%);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -520,15 +648,11 @@ svg {
   z-index: 1;
 }
 .card:hover {
+  will-change: transform;
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
   border-color: var(--border-strong);
-  background: rgba(255, 255, 255, 0.065);
-}
-@media (prefers-reduced-motion: reduce) {
-  .card {
-    animation: none;
-  }
+  background: var(--surface-hover);
 }
 
 .card-top {
@@ -541,8 +665,8 @@ svg {
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md);
-  background: rgba(54, 169, 225, 0.14);
-  color: var(--brand);
+  background: var(--icon-bg);
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -640,7 +764,7 @@ svg {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--brand);
+  color: var(--accent);
   text-decoration: none;
   transition: color 0.15s ease, gap 0.15s ease;
 }
@@ -681,7 +805,7 @@ svg {
   color: var(--brand-on);
 }
 .btn-primary:hover {
-  background: #55b8e6;
+  background: var(--brand-hover);
 }
 .btn-primary:hover svg {
   transform: translateX(3px);
@@ -727,7 +851,7 @@ svg {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(6, 7, 14, 0.65);
+  background: var(--overlay-bg);
   align-items: center;
   justify-content: center;
   padding: var(--sp-4);
@@ -756,11 +880,6 @@ svg {
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
   animation: modalIn 0.25s var(--ease-out) both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .modal {
-    animation: none;
-  }
 }
 .modal-top {
   display: flex;
@@ -842,8 +961,8 @@ svg {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--brand);
-  color: var(--brand);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   background: transparent;
   padding: 9px 18px;
   border-radius: var(--radius-sm);
@@ -886,7 +1005,7 @@ svg {
   transition: background 0.15s ease, transform 0.15s ease;
 }
 .modal-close:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hover-fill);
   color: var(--text);
   transform: rotate(90deg);
 }
@@ -926,7 +1045,7 @@ svg {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hover-fill);
   color: var(--text);
   font-size: 12px;
   font-weight: 700;
@@ -941,8 +1060,8 @@ svg {
 }
 .code-block {
   flex: 1;
-  background: #0d0e1a;
-  color: #cfe6f7;
+  background: var(--code-bg);
+  color: var(--code-text);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
@@ -961,16 +1080,20 @@ svg {
   transition: border-color 0.15s ease, color 0.15s ease;
 }
 .copy-btn:hover {
-  border-color: var(--brand);
-  color: var(--brand);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .copy-btn svg {
   width: 16px;
   height: 16px;
 }
 .copy-btn.copied {
-  border-color: #4ade80;
-  color: #4ade80;
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.copy-btn.failed {
+  border-color: var(--err);
+  color: var(--err);
 }
 .best-effort {
   border-top: 1px dashed var(--border);
@@ -978,7 +1101,7 @@ svg {
 }
 .best-effort a {
   font-weight: 700;
-  color: var(--brand);
+  color: var(--accent);
   text-decoration: none;
 }
 .best-effort a:hover {
@@ -1033,7 +1156,7 @@ svg {
   width: 100%;
   height: 100%;
   overflow: visible;
-  color: var(--brand);
+  color: var(--accent);
 }
 .intro-guide-ring {
   fill: none;
@@ -1102,7 +1225,7 @@ svg {
   opacity: 1;
 }
 .intro-skip:hover {
-  color: #fff;
+  color: var(--text);
 }
 
 .intro-mover-active {
@@ -1130,5 +1253,126 @@ svg {
 @media (prefers-reduced-motion: reduce) {
   #intro-overlay {
     display: none !important;
+  }
+}
+
+/* ---------- utilitários e novos componentes ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-4);
+}
+.header-top {
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+.theme-picker {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.theme-swatch {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: var(--sw);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.theme-swatch:hover {
+  transform: scale(1.1);
+}
+.theme-swatch[aria-pressed="true"] {
+  border-color: var(--bg);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+/* amostras fixas: mostram o tema independente do tema atual */
+.theme-swatch[data-theme-choice="constelacao"] {
+  --sw: radial-gradient(circle at 70% 30%, #6fc6f1 0 8%, transparent 9%), #161826;
+}
+.theme-swatch[data-theme-choice="clara"] {
+  --sw: linear-gradient(135deg, #f2f6fb 50%, #36a9e1 50%);
+}
+.theme-swatch[data-theme-choice="asfalto"] {
+  --sw: linear-gradient(135deg, #314084 50%, #86cff3 50%);
+}
+.theme-swatch[data-theme-choice="contraste"] {
+  --sw: linear-gradient(135deg, #000 50%, #ffd60a 50%);
+}
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-muted);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.admin-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+[data-theme="contraste"] a {
+  text-decoration: underline;
+}
+[data-theme="contraste"] .card,
+[data-theme="contraste"] .modal {
+  border-width: 2px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+}
+.card-details {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+.card-details:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* ---------- movimento reduzido (vale para tudo) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
   }
 }

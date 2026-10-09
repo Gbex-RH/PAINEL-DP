@@ -17,6 +17,8 @@
  *   GITHUB_BRANCH   opcional, default "main"
  */
 
+const crypto = require("crypto");
+
 const TOOLS_PATH = "assets/js/tools-data.js";
 const START_MARKER = "/*__TOOLS_JSON_START__*/";
 const END_MARKER = "/*__TOOLS_JSON_END__*/";
@@ -52,12 +54,60 @@ function checkAuth(event, adminPassword) {
   if (!adminPassword) {
     return "ADMIN_PASSWORD não está configurado no Netlify (Site settings → Environment variables).";
   }
-  const sent = event.headers["x-admin-password"] || event.headers["X-Admin-Password"];
-  if (!sent || sent !== adminPassword) {
+  const headers = event.headers || {};
+  const sent = headers["x-admin-password"] || headers["X-Admin-Password"];
+  if (!sent || !safeEqual(String(sent), adminPassword)) {
     return "unauthorized";
   }
   return null;
 }
+
+// Comparação em tempo constante: compara os hashes SHA-256 (sempre do mesmo
+// tamanho) para que o tempo de resposta não revele quantas letras acertaram.
+function safeEqual(a, b) {
+  const ha = crypto.createHash("sha256").update(a).digest();
+  const hb = crypto.createHash("sha256").update(b).digest();
+  return crypto.timingSafeEqual(ha, hb);
+}
+
+// Limite de tentativas de senha por IP: 5 erros em 15 min bloqueiam o IP até
+// a janela acabar. ATENÇÃO: este Map vive na memória de UMA instância da
+// função (cada instância serverless tem o seu e some quando ela é
+// reciclada), então é uma proteção "melhor esforço". A proteção de verdade
+// virá depois, com login via Firebase.
+const MAX_FAILURES = 5;
+const WINDOW_MS = 15 * 60 * 1000;
+const FAIL_DELAY_MS = 1000;
+const attempts = new Map(); // ip -> { count, first }
+
+function getClientIp(event) {
+  const h = event.headers || {};
+  const direct = h["x-nf-client-connection-ip"];
+  if (direct) return String(direct).trim();
+  const fwd = h["x-forwarded-for"];
+  if (fwd) return String(fwd).split(",")[0].trim();
+  return "unknown";
+}
+
+// Retorna minutos restantes de bloqueio, ou 0 se pode tentar.
+function blockedMinutes(ip, now) {
+  const a = attempts.get(ip);
+  if (!a) return 0;
+  if (now - a.first >= WINDOW_MS) {
+    attempts.delete(ip);
+    return 0;
+  }
+  if (a.count >= MAX_FAILURES) return Math.max(1, Math.ceil((a.first + WINDOW_MS - now) / 60000));
+  return 0;
+}
+
+function registerFailure(ip, now) {
+  const a = attempts.get(ip);
+  if (!a || now - a.first >= WINDOW_MS) attempts.set(ip, { count: 1, first: now });
+  else a.count += 1;
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function githubGetFile(repo, branch, token) {
   const res = await fetch(
@@ -72,7 +122,8 @@ async function githubGetFile(repo, branch, token) {
   );
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Não foi possível ler o arquivo no GitHub (${res.status}): ${text}`);
+    console.error("GitHub GET falhou:", res.status, text);
+    throw new Error(`GitHub GET ${res.status}`);
   }
   const data = await res.json();
   const content = Buffer.from(data.content, "base64").toString("utf8");
@@ -97,7 +148,8 @@ async function githubPutFile(repo, branch, token, newContent, sha, message) {
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Não foi possível salvar no GitHub (${res.status}): ${text}`);
+    console.error("GitHub PUT falhou:", res.status, text);
+    throw new Error(`GitHub PUT ${res.status}`);
   }
   const data = await res.json();
   return data.content.sha;
@@ -355,9 +407,23 @@ async function handleBatch(env, payload) {
 exports.handler = async function (event) {
   const env = getEnv();
 
+  const ip = getClientIp(event);
+  const wait = blockedMinutes(ip, Date.now());
+  if (wait > 0) {
+    return respond(429, { error: `Muitas tentativas. Aguarde ${wait} minuto${wait === 1 ? "" : "s"}.` });
+  }
+
   const authError = checkAuth(event, env.adminPassword);
-  if (authError === "unauthorized") return respond(401, { error: "Senha incorreta." });
-  if (authError) return respond(500, { error: authError });
+  if (authError === "unauthorized") {
+    registerFailure(ip, Date.now());
+    await sleep(FAIL_DELAY_MS);
+    return respond(401, { error: "Senha incorreta." });
+  }
+  if (authError) {
+    console.error("Configuração ausente:", authError);
+    return respond(500, { error: "Servidor sem configuração de senha. Avise o responsável." });
+  }
+  attempts.delete(ip);
 
   if (!env.token) {
     return respond(500, { error: "GITHUB_TOKEN não está configurado no Netlify (Site settings → Environment variables)." });
@@ -368,11 +434,19 @@ exports.handler = async function (event) {
       return await handleList(env);
     }
     if (event.httpMethod === "POST") {
-      const payload = JSON.parse(event.body || "{}");
+      let payload;
+      try {
+        payload = JSON.parse(event.body || "{}");
+      } catch {
+        return respond(400, { error: "Requisição inválida (JSON malformado)." });
+      }
+      if (!payload || typeof payload !== "object") return respond(400, { error: "Requisição inválida." });
       return await handleMutate(env, payload);
     }
     return respond(405, { error: "Método não permitido." });
   } catch (err) {
-    return respond(500, { error: err.message || "Erro interno." });
+    // Detalhes (inclusive respostas do GitHub) ficam só no log do servidor.
+    console.error("Erro em tools:", err);
+    return respond(500, { error: "Erro ao falar com o GitHub ou processar a lista. Tente novamente em instantes." });
   }
 };

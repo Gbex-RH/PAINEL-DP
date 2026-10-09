@@ -69,7 +69,29 @@ input, select, textarea {
   padding: 9px 10px;
   font: inherit;
 }
+/* Dropdowns nativos: sem isto a lista abre branca com texto branco. */
+html { color-scheme: dark; }
+select { color-scheme: dark; background-color: var(--surface-solid); }
+select option, select optgroup {
+  background-color: var(--surface-solid);
+  color: var(--text);
+}
 input:disabled { opacity: 0.55; }
+
+.field-help { margin: 0 0 6px; font-size: 0.78rem; line-height: 1.35; color: var(--text-muted); }
+.icon-picker { display: flex; align-items: center; gap: 10px; }
+.icon-preview {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--brand);
+}
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--brand);

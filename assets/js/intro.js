@@ -27,7 +27,40 @@
   }
 
   function removeOverlay(overlay) {
+    setPageInert(false);
     if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  }
+
+  // enquanto a abertura cobre a tela, o conteúdo por trás não recebe foco nem leitura
+  function setPageInert(on) {
+    var els = document.querySelectorAll(".site-header, .toolbar, main, .site-footer");
+    for (var i = 0; i < els.length; i++) {
+      if (on) els[i].setAttribute("inert", "");
+      else els[i].removeAttribute("inert");
+    }
+  }
+
+  // espera a logo carregar (com limite de tempo) para medir tamanhos corretos
+  function whenImageReady(img, timeoutMs, cb) {
+    var done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      cb();
+    }
+    if (!img || (img.complete && img.naturalWidth > 0)) {
+      finish();
+      return;
+    }
+    img.addEventListener("load", finish);
+    img.addEventListener("error", finish);
+    window.setTimeout(finish, timeoutMs);
+  }
+
+  function isTypingTarget(el) {
+    if (!el || !el.tagName) return false;
+    var tag = el.tagName.toLowerCase();
+    return tag === "input" || tag === "textarea" || tag === "select" || el.isContentEditable === true;
   }
 
   function runIntro(overlay, mover, tilt, stage) {
@@ -35,6 +68,7 @@
     var stageRect = stage.getBoundingClientRect();
 
     if (!stageRect.width || !moverRect.width) {
+      // sem medidas válidas: não anima e NÃO marca o dia (tenta de novo na próxima visita)
       removeOverlay(overlay);
       return;
     }
@@ -84,7 +118,11 @@
     }
 
     function onKeyDown(e) {
-      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") toResting();
+      if (e.key === "Escape") {
+        toResting();
+      } else if ((e.key === "Enter" || e.key === " ") && !isTypingTarget(e.target)) {
+        toResting();
+      }
     }
 
     overlay.addEventListener("click", toResting);
@@ -96,6 +134,7 @@
     requestAnimationFrame(function () {
       mover.classList.add("intro-logo-visible");
       overlay.classList.add("intro-drawn");
+      markShownToday(); // só marca o dia quando a animação realmente começou
     });
 
     window.setTimeout(toResting, 1500);
@@ -119,7 +158,10 @@
       return;
     }
 
-    markShownToday();
-    runIntro(overlay, mover, tilt, stage);
+    var img = mover.querySelector("img");
+    setPageInert(true);
+    whenImageReady(img, 2500, function () {
+      runIntro(overlay, mover, tilt, stage);
+    });
   });
 })();
