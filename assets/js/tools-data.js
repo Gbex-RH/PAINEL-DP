@@ -211,5 +211,117 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
       "authNote": null
     },
     "local": null
+  },
+  {
+    "id": "publicar-dashboard",
+    "name": "PUBLICAR DASHBOARD",
+    "description": "Site criado pela equipe de TI, para subir o DASHBOARD RH de forma que fique em um endereço seguro.",
+    "category": "Dashboard Gerencial",
+    "tags": [
+      "dash",
+      "rh",
+      "site",
+      "ti",
+      "dashboard"
+    ],
+    "icon": "layout-dashboard",
+    "highlight": null,
+    "version": "gbex@123",
+    "cardSize": "tiny",
+    "order": 1,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://gestor.gbex.app.br/login",
+      "authNote": null
+    },
+    "local": null
+  },
+  {
+    "id": "gerador-afdt-batidas-de-intervalo",
+    "name": "GERADOR AFDT - BATIDAS DE INTERVALO",
+    "description": "Ferramenta criada pela TI que lê as batidas de ponto já lançadas no sistema e sugere as batidas de intervalo de sábados e os intervalos extras de jantar. O sistema devolve um novo AFDT para importação.",
+    "category": "Ponto Eletrônico",
+    "tags": [
+      "ponto",
+      "afdt",
+      "aft",
+      "afd",
+      "arquivo",
+      "janta",
+      "sabado"
+    ],
+    "icon": "clock",
+    "highlight": null,
+    "version": null,
+    "cardSize": "tiny",
+    "order": 2,
+    "status": "hosted",
+    "hosted": {
+      "url": "http://10.85.0.22/Ponto_AFD/",
+      "authNote": null
+    },
+    "local": null
+  },
+  {
+    "id": "gbex-carreira",
+    "name": "GBEX CARREIRA",
+    "description": "Site desenvolvido pela TI para captação de talentos da empresa. A ferramenta centraliza o recebimento de currículos e candidaturas, facilitando o processo de seleção e o contato com candidatos interessados nas vagas disponíveis.",
+    "category": "RH",
+    "tags": [
+      "talentos",
+      "vagas",
+      "contratação",
+      "admissão",
+      "Captação de talentos",
+      "recrutamento e seleção",
+      "banco de currículos",
+      "vagas de emprego",
+      "portal de carreiras",
+      "recursos humanos",
+      "RH",
+      "candidaturas online",
+      "processo seletivo",
+      "contratação."
+    ],
+    "icon": "search",
+    "highlight": null,
+    "version": null,
+    "cardSize": "tiny",
+    "order": 5,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://gbexlogistica.com.br/carreiras/",
+      "authNote": null
+    },
+    "local": null
+  },
+  {
+    "id": "fortes-rh",
+    "name": "FORTES RH",
+    "description": "Portal da Fortes, onde os candidatos selecionados pelos gestores inserem suas informações pessoais e documentos necessários para dar início ao processo de admissão.",
+    "category": "RH",
+    "tags": [
+      "Admissão de funcionários",
+      "portal Fortes",
+      "pré-admissão",
+      "documentação admissional",
+      "cadastro de candidatos",
+      "onboarding",
+      "RH",
+      "contratação",
+      "dados do candidato",
+      "sistema Fortes."
+    ],
+    "icon": "file-spreadsheet",
+    "highlight": "Admissão",
+    "version": null,
+    "cardSize": "compact",
+    "order": 3,
+    "status": "hosted",
+    "hosted": {
+      "url": "https://rh.gbexlogistica.com.br:8480/fortesrh/externo/anuncios?empresaId=2",
+      "authNote": null
+    },
+    "local": null
   }
 ]/*__TOOLS_JSON_END__*/;
