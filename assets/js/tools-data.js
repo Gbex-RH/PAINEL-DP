@@ -227,7 +227,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "icon": "layout-dashboard",
     "highlight": null,
     "version": "gbex@123",
-    "cardSize": "tiny",
+    "cardSize": "compact",
     "order": 1,
     "status": "hosted",
     "hosted": {
@@ -240,7 +240,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "id": "gerador-afdt-batidas-de-intervalo",
     "name": "GERADOR AFDT - BATIDAS DE INTERVALO",
     "description": "Ferramenta criada pela TI que lê as batidas de ponto já lançadas no sistema e sugere as batidas de intervalo de sábados e os intervalos extras de jantar. O sistema devolve um novo AFDT para importação.",
-    "category": "Ponto Eletrônico",
+    "category": "Ferramenta",
     "tags": [
       "ponto",
       "afdt",
