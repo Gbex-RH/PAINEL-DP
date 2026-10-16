@@ -155,7 +155,7 @@ const TOOLS = /*__TOOLS_JSON_START__*/[
     "order": 50,
     "status": "hosted",
     "hosted": {
-      "url": "https://assinador-rh.netlify.app/",
+      "url": "https://assinador-rh-gbex.netlify.app/",
       "authNote": null
     },
     "local": null
